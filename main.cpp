@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SDL2/SDL.h>
+#include "SDLUtils.h"
 
 int main(int, char**) {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
