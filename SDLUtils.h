@@ -1,6 +1,7 @@
 #pragma once
 
-#include <SDL2/SDL.h>
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_image.h"
 #include <iostream>
 
 namespace SDLUtils {
@@ -15,5 +16,10 @@ namespace SDLUtils {
 	std::string getResourceDirPath(const std::string& subDir = "");
 
 	// load texture from bmp file
-	SDL_Texture* loadBMPTexture(SDL_Renderer* renderer, const std::string& file);
+	SDL_Texture* loadTexture(SDL_Renderer* renderer, const std::string& file);
+
+	// render texture given x,y coordinates and a renderer, with optional width and height
+	// if width and height are not given the texture size is used
+	void renderTexture(SDL_Texture* texture, SDL_Renderer* renderer, int x, int y);
+	void renderTexture(SDL_Texture* texture, SDL_Renderer* renderer, int x, int y, int w, int h);
 }
