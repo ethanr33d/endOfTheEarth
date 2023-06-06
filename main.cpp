@@ -1,5 +1,6 @@
 #include <iostream>
-#include <SDL2/SDL.h>
+#include  "SDL2/SDL.h"
+#include "SDL2/SDL_image.h"
 #include "SDLUtils.h"
 
 int main(int, char**) {
