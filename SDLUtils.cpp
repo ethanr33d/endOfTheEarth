@@ -16,7 +16,7 @@ std::string SDLUtils::getResourceDirPath(const std::string& subDir) {
 
 	if (baseResPath.empty()) {
 		char* newPath = SDL_GetBasePath();
-		
+
 		if (newPath) {
 			baseResPath = newPath;
 			SDL_free(newPath);
@@ -26,10 +26,10 @@ std::string SDLUtils::getResourceDirPath(const std::string& subDir) {
 		}
 
 		// find last PATH_SEP, excluding trailing one
-		size_t appDirectoryIndex = baseResPath.rfind(PATH_SEP, baseResPath.length() - 2); 
+		size_t appDirectoryIndex = baseResPath.rfind(PATH_SEP, baseResPath.length() - 2);
 
 		// move into parent directory, add back training path PATH_SEP
-		baseResPath = baseResPath.substr(0, appDirectoryIndex + 1); 
+		baseResPath = baseResPath.substr(0, appDirectoryIndex + 1);
 
 		baseResPath = baseResPath + RESOURCE_DIR_NAME + PATH_SEP;
 	}
@@ -37,24 +37,27 @@ std::string SDLUtils::getResourceDirPath(const std::string& subDir) {
 	return subDir.empty() ? baseResPath : baseResPath + subDir + PATH_SEP;
 }
 
-SDL_Texture* SDLUtils::loadBMPTexture(SDL_Renderer* renderer, const std::string& file) {
+SDL_Texture* SDLUtils::loadTexture(SDL_Renderer* renderer, const std::string& file) {
 	SDL_Texture* newTex = nullptr;
-	SDL_Surface* newSurface = nullptr;
 
-	newSurface = SDL_LoadBMP(file.c_str());
+	newTex = IMG_LoadTexture(renderer, file.c_str());
 
-	if (newSurface != nullptr) {
-		newTex = SDL_CreateTextureFromSurface(renderer, newSurface);
-		SDL_FreeSurface(newSurface);
-
-		if (newTex == nullptr) {
-			error("CreateTextureFromSurface");
-		}
+	if (newTex == nullptr) {
+		error("CreateTextureFromSurface");
 	}
-	else {
-		error("LoadBMP");
-	}
-
 
 	return newTex;
+}
+
+void SDLUtils::renderTexture(SDL_Texture* texture, SDL_Renderer* renderer, int x, int y) {
+	SDL_Rect newRect = { x, y };
+
+	SDL_QueryTexture(texture, NULL, NULL, &newRect.w, &newRect.h); // default to texture width & height
+	SDL_RenderCopy(renderer, texture, NULL, &newRect);
+}
+
+void SDLUtils::renderTexture(SDL_Texture* texture, SDL_Renderer* renderer, int x, int y, int w, int h) {
+	SDL_Rect newRect = { x, y, w, h };
+
+	SDL_RenderCopy(renderer, texture, NULL, &newRect);
 }
