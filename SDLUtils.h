@@ -1,3 +1,5 @@
+// Utility header for common SDL library calls
+
 #pragma once
 
 #include "SDL2/SDL.h"
