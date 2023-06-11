@@ -4,6 +4,9 @@
 
 // Constants
 
+//General
+const char* GAME_NAME = "End of the Earth";
+
 // Window constants
 const int WINDOW_WIDTH = 1000;
 const int WINDOW_HEIGHT = 500;
@@ -25,7 +28,7 @@ bool initializeComponents(SDL_Window* &window, SDL_Renderer* &renderer) {
 	}
 
 	// initialize our window
-	window = SDL_CreateWindow("End of the Earth",
+	window = SDL_CreateWindow(GAME_NAME,
 		WINDOW_DEFAULT_XPOS,
 		WINDOW_DEFAULT_YPOS,
 		WINDOW_HEIGHT,
