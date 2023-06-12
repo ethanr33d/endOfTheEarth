@@ -27,6 +27,11 @@ bool initializeComponents(SDL_Window* &window, SDL_Renderer* &renderer) {
 		return false;
 	}
 
+	// initialize text library
+	if (TTF_Init()) {
+		SDLUtils::error("TTF_Init");
+		return false;
+	}
 	// initialize our window
 	window = SDL_CreateWindow(GAME_NAME,
 		WINDOW_DEFAULT_XPOS,
@@ -50,7 +55,7 @@ bool initializeComponents(SDL_Window* &window, SDL_Renderer* &renderer) {
 		return false;
 	}
 
-	return 0;
+	return true;
 }
 
 // Handle relevant user inputs / events
@@ -69,7 +74,13 @@ bool HandleEvents(SDL_Window* window, SDL_Renderer* renderer) {
 }
 
 void RenderFrame(SDL_Window* window, SDL_Renderer* renderer) {
-
+	// test case
+	Button newButton("hello world");
+	newButton.setSize(200, 100);
+	newButton.setPosition(400, 200);
+	newButton.show();
+	newButton.render(renderer);
+	SDL_SetRenderDrawColor(renderer, 255, 128, 128, 255);
 }
 
 int main(int, char**) {
@@ -80,9 +91,8 @@ int main(int, char**) {
 		SDL_Quit();
 		return 1;
 	}
-	
+
 	bool readyToQuit = false;
-	SDL_Event event{};
 
 	while (!readyToQuit) {
 		readyToQuit = HandleEvents(mainWindow, renderer); 
@@ -91,5 +101,10 @@ int main(int, char**) {
 		SDL_RenderClear(renderer);
 	}
 
+	//cleanup
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(mainWindow);
+	TTF_Quit();
+	SDL_Quit();
 	return 0;
 }
