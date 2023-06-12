@@ -1,7 +1,7 @@
 #include <iostream>
 #include  "SDL2/SDL.h"
 #include "SDLUtils.h"
-
+#include "Button.h"
 // Constants
 
 //General
@@ -31,8 +31,8 @@ bool initializeComponents(SDL_Window* &window, SDL_Renderer* &renderer) {
 	window = SDL_CreateWindow(GAME_NAME,
 		WINDOW_DEFAULT_XPOS,
 		WINDOW_DEFAULT_YPOS,
-		WINDOW_HEIGHT,
 		WINDOW_WIDTH,
+		WINDOW_HEIGHT,
 		WINDOW_FLAGS
 	);
 
@@ -42,7 +42,7 @@ bool initializeComponents(SDL_Window* &window, SDL_Renderer* &renderer) {
 	}
 
 	// Create rendering context
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, RENDERER_FLAGS);
+	renderer = SDL_CreateRenderer(window, -1, RENDERER_FLAGS);
 
 	if (!renderer) {
 		SDLUtils::error("SDL_CreateRenderer");
@@ -64,6 +64,8 @@ bool HandleEvents(SDL_Window* window, SDL_Renderer* renderer) {
 				return true;
 		}
 	}
+
+	return false; // don't quit by default
 }
 
 void RenderFrame(SDL_Window* window, SDL_Renderer* renderer) {
@@ -88,4 +90,6 @@ int main(int, char**) {
 		SDL_RenderPresent(renderer); // show new frame
 		SDL_RenderClear(renderer);
 	}
+
+	return 0;
 }
