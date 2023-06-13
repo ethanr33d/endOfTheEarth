@@ -75,11 +75,29 @@ bool HandleEvents(SDL_Window* window, SDL_Renderer* renderer) {
 
 void RenderFrame(SDL_Window* window, SDL_Renderer* renderer) {
 	// test case
-	Button newButton("hello world");
+	Button newButton("Menu");
 	newButton.setSize(200, 100);
-	newButton.setPosition(400, 200);
+	newButton.setPosition(450, 250);
 	newButton.show();
 	newButton.render(renderer);
+
+	Button newButton2("swalalala");
+	newButton2.setSize(400, 200);
+	newButton2.setPosition(5, 5);
+	newButton2.show();
+	newButton2.render(renderer);
+
+	Button newButton3("Settings");
+	newButton3.setSize(50, 100);
+	newButton3.setPosition(700, 350);
+	newButton3.show();
+	newButton3.render(renderer);
+
+	Button newButton4("Menu");
+	newButton4.setSize(200, 200);
+	newButton4.setPosition(50, 250);
+	newButton4.show();
+	newButton4.render(renderer);
 	SDL_SetRenderDrawColor(renderer, 255, 128, 128, 255);
 }
 
