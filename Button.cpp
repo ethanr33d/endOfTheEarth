@@ -8,8 +8,20 @@ Button::~Button() {
 
 void Button::createTextTexture(SDL_Renderer* renderer) {
 	SDL_Surface* textSurface = TTF_RenderText_Blended(font, buttonText.c_str(), fontColor);
+
+	if (!textSurface) {
+		SDLUtils::error("Button::createTextTexture RenderTextBlend");
+		return;
+	}
+
 	textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
 
+	if (!textTexture) {
+		SDLUtils::error("Button::createTextTexture TextureFromSurface");
+		return;
+	}
+
+	SDL_SetTextureScaleMode(textTexture, SDL_ScaleModeBest); // for better text scaling
 	SDL_FreeSurface(textSurface);
 }
 
@@ -62,6 +74,10 @@ void Button::render(SDL_Renderer* renderer) {
 	SDL_RenderFillRect(renderer, &bgRect);
 
 	// create text
+	double scalar = fmin(static_cast<double>(bgRect.w - TEXT_PADDING) / textRect.w,
+						 static_cast<double>(bgRect.h - TEXT_PADDING) / textRect.h);
+	textRect.w = static_cast<int>(textRect.w * scalar);
+	textRect.h = static_cast<int>(textRect.h * scalar);
 	textRect.x = (x + w / 2) - (textRect.w / 2);
 	textRect.y = (y + h / 2) - (textRect.h / 2);
 	SDL_RenderCopy(renderer, textTexture, NULL, &textRect); // text should only fill background
