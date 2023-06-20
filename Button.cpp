@@ -56,6 +56,10 @@ void Button::mouseUp() {
 	upHandler();
 }
 
+SDL_Rect Button::getClickBox() {
+	return SDL_Rect{ x,y,w,h };
+}
+
 void Button::render(SDL_Renderer* renderer) {
 	if (!shown) return;
 	// border is not included in button size

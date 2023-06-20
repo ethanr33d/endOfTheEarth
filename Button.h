@@ -47,7 +47,10 @@ class Button : public Renderable, public IClickable {
 		void setMouseDownHandle(void (*func) ());
 		void setMouseUpHandle(void (*func) ());
 		void setBorder(SDL_Color color, int size);
+
+		// required functions
 		virtual void mouseDown();
 		virtual void mouseUp();
+		virtual SDL_Rect getClickBox();
 		virtual void render(SDL_Renderer* renderer);
 };
