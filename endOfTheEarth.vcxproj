@@ -142,11 +142,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Engine.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SDLUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
+    <ClInclude Include="Engine.h" />
     <ClInclude Include="IClickable.h" />
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="SDLUtils.h" />
