@@ -1,6 +1,17 @@
 #include "Engine.h"
 
-bool Engine::initializeComponents(std::string appName) {
+// private member methods
+
+bool Engine::pointContainedInBox(const SDL_Rect& target, int queryX, int queryY) {
+	bool Xcheck = (queryX >= target.x && queryX <= target.x + target.w) ? true : false;
+	bool Ycheck = (queryY >= target.y && queryY <= target.y + target.h) ? true : false;
+
+	return Xcheck && Ycheck;
+}
+
+// public member methods 
+
+bool Engine::initializeComponents(const std::string& appName) {
 	// initialize SDL and necessary subsystems
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
 		SDLUtils::error("SDL_Init");
@@ -37,6 +48,10 @@ bool Engine::initializeComponents(std::string appName) {
 	return true;
 }
 
+void Engine::pushGameState(const IGameState& state) {
+	gameStates.push_back(state);
+}
+
 bool Engine::handleEvents() {
 	SDL_Event event{};
 
@@ -44,6 +59,19 @@ bool Engine::handleEvents() {
 		switch (event.type) {
 		case SDL_QUIT:
 			return true;
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+		case SDL_MOUSEBUTTONUP:
+			for (int i = 0; i < clickableElements.size(); i++) {
+				IClickable& element = clickableElements[i];
+				SDL_Rect elementBox = clickableElements[i].getClickBox();
+				bool contained = pointContainedInBox(elementBox, event.button.x, event.button.y);
+
+				if (contained) {
+					if (SDL_MOUSEBUTTONDOWN) element.mouseDown();
+					if (SDL_MOUSEBUTTONUP) element.mouseUp();
+				}
+			}
 		}
 	}
 
@@ -51,33 +79,8 @@ bool Engine::handleEvents() {
 }
 
 void Engine::renderFrame() {
-	// test case
-	Button newButton("Menu");
-	newButton.setSize(200, 100);
-	newButton.setPosition(450, 250);
-	newButton.show();
-	newButton.render(renderer);
-
-	Button newButton2("swalalala");
-	newButton2.setSize(400, 200);
-	newButton2.setPosition(5, 5);
-	newButton2.show();
-	newButton2.render(renderer);
-
-	Button newButton3("Settings");
-	newButton3.setSize(50, 100);
-	newButton3.setPosition(700, 350);
-	newButton3.show();
-	newButton3.render(renderer);
-
-	Button newButton4("Menu");
-	newButton4.setSize(200, 200);
-	newButton4.setPosition(50, 250);
-	newButton4.show();
-	newButton4.render(renderer);
-	SDL_SetRenderDrawColor(renderer, 255, 128, 128, 255);
-
-	SDL_RenderPresent(renderer); // show new frame
+	gameStates[0].drawFrame();
+	SDL_RenderPresent(renderer);
 	SDL_RenderClear(renderer);
 }
 
@@ -86,4 +89,12 @@ void Engine::cleanup() {
 	if (renderer) SDL_DestroyRenderer(renderer);
 	TTF_Quit();
 	SDL_Quit();
+}
+
+void Engine::registerNewClickable(const IClickable& element) {
+	clickableElements.push_back(element);
+}
+
+SDL_Renderer* Engine::getRenderer() {
+	return renderer;
 }
