@@ -7,9 +7,9 @@
 #include <string>
 #include <cmath>
 #include "SDLUtils.h"
-#include "Renderable.h"
+#include "Drawable.h"
 #include "IClickable.h"
-class Button : public Renderable, public IClickable {
+class Button : public Drawable, public IClickable {
 	private:
 		// Constants
 		inline static const SDL_Color DEFAULT_BG_COLOR {180, 180, 180, 255};
@@ -52,5 +52,5 @@ class Button : public Renderable, public IClickable {
 		virtual void mouseDown();
 		virtual void mouseUp();
 		virtual SDL_Rect getClickBox();
-		virtual void render(SDL_Renderer* renderer);
+		virtual void draw(SDL_Renderer* renderer);
 };

@@ -60,7 +60,7 @@ SDL_Rect Button::getClickBox() {
 	return SDL_Rect{ x,y,w,h };
 }
 
-void Button::render(SDL_Renderer* renderer) {
+void Button::draw(SDL_Renderer* renderer) {
 	if (!shown) return;
 	// border is not included in button size
 	SDL_Rect borderRect{ x - borderSize, y - borderSize, w + 2 * borderSize, h + 2 * borderSize};
