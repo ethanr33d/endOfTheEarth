@@ -7,6 +7,10 @@ Button::~Button() {
 }
 
 void Button::createTextTexture(SDL_Renderer* renderer) {
+	if (!font) {
+		font = TTF_OpenFont(DEFAULT_FONT.c_str(), DEFAULT_FONT_SIZE);
+	}
+
 	SDL_Surface* textSurface = TTF_RenderText_Blended(font, buttonText.c_str(), fontColor);
 
 	if (!textSurface) {
@@ -41,18 +45,20 @@ void Button::setBorder(SDL_Color color, int size) {
 }
 
 void Button::setMouseDownHandle(void (*func) ()) {
-	upHandler = func;
-}
-
-void Button::setMouseUpHandle(void (*func) ()) {
 	downHandler = func;
 }
 
+void Button::setMouseUpHandle(void (*func) ()) {
+	upHandler = func;
+}
+
 void Button::mouseDown() {
+	if (!downHandler) return;
 	downHandler();
 }
 
 void Button::mouseUp() {
+	if (!upHandler) return;
 	upHandler();
 }
 
@@ -67,7 +73,10 @@ void Button::draw(SDL_Renderer* renderer) {
 	SDL_Rect bgRect{ x, y, w, h };
 	SDL_Rect textRect{ 0,0,0,0 };
 
-	if (!textTexture) createTextTexture(renderer);
+	if (!textTexture) {
+		createTextTexture(renderer);
+	}
+
 	SDL_QueryTexture(textTexture, NULL, NULL, &textRect.w, &textRect.h); // get total text dimensions
 	// create border
 	SDL_SetRenderDrawColor(renderer, borderColor.r, borderColor.g, borderColor.b, borderColor.a);
