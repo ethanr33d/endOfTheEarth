@@ -1,5 +1,6 @@
 #include <iostream>
 #include  "SDL2/SDL.h"
+#include "SDL2/SDL_ttf.h"
 #include "SDLUtils.h"
 #include "Button.h"
 #include "Engine.h"
@@ -16,7 +17,8 @@ int main(int, char**) {
 		return 1;
 	}
 
-	gameEngine.pushGameState(MainMenu(gameEngine));
+	MainMenu initState(gameEngine);
+	gameEngine.pushGameState(&initState);
 
 	bool readyToQuit = false;
 
