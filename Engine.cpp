@@ -1,4 +1,5 @@
 #include "Engine.h"
+#include "IGameState.h"
 
 // private member methods
 
@@ -48,7 +49,7 @@ bool Engine::initializeComponents(const std::string& appName) {
 	return true;
 }
 
-void Engine::pushGameState(const IGameState& state) {
+void Engine::pushGameState(IGameState* state) {
 	gameStates.push_back(state);
 }
 
@@ -63,13 +64,13 @@ bool Engine::handleEvents() {
 		case SDL_MOUSEBUTTONDOWN:
 		case SDL_MOUSEBUTTONUP:
 			for (int i = 0; i < clickableElements.size(); i++) {
-				IClickable& element = clickableElements[i];
-				SDL_Rect elementBox = clickableElements[i].getClickBox();
+				IClickable* element = clickableElements[i];
+				SDL_Rect elementBox = element->getClickBox();
 				bool contained = pointContainedInBox(elementBox, event.button.x, event.button.y);
 
 				if (contained) {
-					if (SDL_MOUSEBUTTONDOWN) element.mouseDown();
-					if (SDL_MOUSEBUTTONUP) element.mouseUp();
+					if (event.type == SDL_MOUSEBUTTONDOWN) element->mouseDown();
+					if (event.type == SDL_MOUSEBUTTONUP) element->mouseUp();
 				}
 			}
 		}
@@ -79,7 +80,7 @@ bool Engine::handleEvents() {
 }
 
 void Engine::renderFrame() {
-	gameStates[0].drawFrame();
+	gameStates[0]->drawFrame();
 	SDL_RenderPresent(renderer);
 	SDL_RenderClear(renderer);
 }
@@ -91,7 +92,7 @@ void Engine::cleanup() {
 	SDL_Quit();
 }
 
-void Engine::registerNewClickable(const IClickable& element) {
+void Engine::registerNewClickable(IClickable* element) {
 	clickableElements.push_back(element);
 }
 
