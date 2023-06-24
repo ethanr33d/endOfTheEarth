@@ -1,7 +1,14 @@
 #include "Engine.h"
-#include "IGameState.h"
+#include "GameState.h"
 
 // private member methods
+
+Engine::~Engine() {
+	if (mainWindow) SDL_DestroyWindow(mainWindow);
+	if (renderer) SDL_DestroyRenderer(renderer);
+	TTF_Quit();
+	SDL_Quit();
+}
 
 bool Engine::pointContainedInBox(const SDL_Rect& target, int queryX, int queryY) {
 	bool Xcheck = (queryX >= target.x && queryX <= target.x + target.w) ? true : false;
@@ -49,8 +56,10 @@ bool Engine::initializeComponents(const std::string& appName) {
 	return true;
 }
 
-void Engine::pushGameState(IGameState* state) {
-	gameStates.push_back(state);
+void Engine::pushGameState(GameState* state) {
+	gameStates.push(state);
+	clickableElements = state->getClickableElements();
+	hoverableElements = state->getHoverableElements();
 }
 
 bool Engine::handleEvents() {
@@ -63,14 +72,49 @@ bool Engine::handleEvents() {
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 		case SDL_MOUSEBUTTONUP:
-			for (int i = 0; i < clickableElements.size(); i++) {
-				IClickable* element = clickableElements[i];
+			for (IClickable* element : *clickableElements) {
 				SDL_Rect elementBox = element->getClickBox();
 				bool contained = pointContainedInBox(elementBox, event.button.x, event.button.y);
 
 				if (contained) {
 					if (event.type == SDL_MOUSEBUTTONDOWN) element->mouseDown();
 					if (event.type == SDL_MOUSEBUTTONUP) element->mouseUp();
+				}
+			}
+			break;
+		case SDL_MOUSEMOTION:
+
+			// hover events (pseudo mouseEnter & mouseLeave events)
+			for (IHoverable* element : *hoverableElements) {
+				SDL_Rect elementBox = element->getHoverBox();
+				bool contained = pointContainedInBox(elementBox, event.motion.x, event.motion.y);
+
+				if (contained) { // check if we need to fire mouseEnter
+					bool mouseEntered = true;
+
+					// check if mouse already hovering over element
+					if (currentlyHoveredElements.find(element) != currentlyHoveredElements.end()) {
+						mouseEntered = false; // mouseEntered event has already fired	
+					}
+					
+					if (mouseEntered) { // if mouseEntered has not already fired
+						currentlyHoveredElements.insert(element);
+						element->mouseEnter();
+					}
+					
+				}
+				else { // check if we need to fire mouseLeave
+					bool mouseLeft = false;
+
+					// check to see if we are tracking element for a leave event
+					if (currentlyHoveredElements.find(element) != currentlyHoveredElements.end()) {
+						mouseLeft = true;
+					}
+
+					if (mouseLeft) {
+						currentlyHoveredElements.erase(element);
+						element->mouseLeave();
+					}
 				}
 			}
 		}
@@ -80,20 +124,15 @@ bool Engine::handleEvents() {
 }
 
 void Engine::renderFrame() {
-	gameStates[0]->drawFrame();
+	gameStates.top()->drawFrame();
 	SDL_RenderPresent(renderer);
 	SDL_RenderClear(renderer);
 }
 
 void Engine::cleanup() {
-	if (mainWindow) SDL_DestroyWindow(mainWindow);
-	if (renderer) SDL_DestroyRenderer(renderer);
-	TTF_Quit();
-	SDL_Quit();
-}
-
-void Engine::registerNewClickable(IClickable* element) {
-	clickableElements.push_back(element);
+	while (!gameStates.empty()) {
+		gameStates.pop();
+	}
 }
 
 SDL_Renderer* Engine::getRenderer() {
