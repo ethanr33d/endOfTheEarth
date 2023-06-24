@@ -11,6 +11,9 @@ void Button::createTextTexture(SDL_Renderer* renderer) {
 		font = TTF_OpenFont(DEFAULT_FONT.c_str(), DEFAULT_FONT_SIZE);
 	}
 
+	if (buttonText == "") {
+		buttonText = " "; // empty string not permitted in text render functions
+	}
 	SDL_Surface* textSurface = TTF_RenderText_Blended(font, buttonText.c_str(), fontColor);
 
 	if (!textSurface) {
@@ -52,17 +55,39 @@ void Button::setMouseUpHandle(void (*func) ()) {
 	upHandler = func;
 }
 
+void Button::setHoverStartHandle(void (*func) ()) {
+	hoverStartHandler = func;
+}
+
+void Button::setHoverEndHandle(void (*func) ()) {
+	hoverEndHandler = func;
+}
+
 void Button::mouseDown() {
-	if (!downHandler) return;
-	downHandler();
+	if (downHandler) downHandler();
 }
 
 void Button::mouseUp() {
-	if (!upHandler) return;
-	upHandler();
+	if (upHandler) upHandler();
+}
+
+void Button::mouseEnter() {
+	hover = true;
+
+	if (hoverStartHandler) hoverStartHandler();
+}
+
+void Button::mouseLeave() {
+	hover = false;
+
+	if (hoverEndHandler) hoverEndHandler();
 }
 
 SDL_Rect Button::getClickBox() {
+	return SDL_Rect{ x,y,w,h };
+}
+
+SDL_Rect Button::getHoverBox() {
 	return SDL_Rect{ x,y,w,h };
 }
 
@@ -83,12 +108,19 @@ void Button::draw(SDL_Renderer* renderer) {
 	SDL_RenderFillRect(renderer, &borderRect);
 
 	// create background
-	SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+	if (hover) {
+		SDL_SetRenderDrawColor(renderer, hoverColor.r, hoverColor.g, hoverColor.b, hoverColor.a);
+	}
+	else {
+		SDL_SetRenderDrawColor(renderer, bgColor.r, bgColor.g, bgColor.b, bgColor.a);
+	}
+
 	SDL_RenderFillRect(renderer, &bgRect);
 
 	// create text
-	double scalar = fmin(static_cast<double>(bgRect.w - TEXT_PADDING) / textRect.w,
-						 static_cast<double>(bgRect.h - TEXT_PADDING) / textRect.h);
+	// scalar for resizing text to fit button, *2 for both sides
+	double scalar = fmin(static_cast<double>(bgRect.w - TEXT_PADDING * 2) / textRect.w, 
+						 static_cast<double>(bgRect.h - TEXT_PADDING * 2) / textRect.h);
 	textRect.w = static_cast<int>(textRect.w * scalar);
 	textRect.h = static_cast<int>(textRect.h * scalar);
 	textRect.x = (x + w / 2) - (textRect.w / 2);
