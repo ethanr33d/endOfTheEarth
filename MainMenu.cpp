@@ -29,9 +29,9 @@ MainMenu::MainMenu(Engine& engine) : GameState(engine), playBtn(Button("Play")),
 	helpBtn.setPosition(400, 265);
 	creditsBtn.setPosition(400, 375);
 
-	playBtn.setMouseUpHandle(playHandle);
-	helpBtn.setMouseUpHandle(helpHandle);
-	creditsBtn.setMouseUpHandle(creditsHandle);
+	playBtn.setMouseUpHandle(std::bind(&MainMenu::playHandle, this));
+	helpBtn.setMouseUpHandle(std::bind(&MainMenu::helpHandle, this));
+	creditsBtn.setMouseUpHandle(std::bind(&MainMenu::creditsHandle, this));
 
 	playBtn.show();
 	helpBtn.show();

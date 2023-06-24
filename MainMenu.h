@@ -15,9 +15,9 @@ class MainMenu : public GameState {
 		int titleTextureHeight;
 		TTF_Font* titleFont;
 
-		static void playHandle();
-		static void helpHandle();
-		static void creditsHandle();
+		void playHandle();
+		void helpHandle();
+		void creditsHandle();
 	public:
 		~MainMenu();
 		MainMenu(Engine& engine);
