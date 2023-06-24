@@ -144,7 +144,6 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GameState.cpp" />
-    <ClCompile Include="IHoverable.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="SDLUtils.cpp" />
@@ -154,6 +153,7 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="IClickable.h" />
+    <ClInclude Include="IHoverable.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="SDLUtils.h" />
