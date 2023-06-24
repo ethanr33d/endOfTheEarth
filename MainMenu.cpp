@@ -1,49 +1,86 @@
 #include "MainMenu.h"
-void printTest() {
-	std::cout << "test" << std::endl;
+
+void MainMenu::playHandle() {
+	std::cout << "play pressed: " << std::endl;
 }
 
-MainMenu::MainMenu(Engine& engine) : GameState(engine) {
-	// test case
-	button1 = Button("Menu");
-	button1.setSize(200, 100);
-	button1.setPosition(450, 250);
-	button1.show();
-	button1.setMouseUpHandle(printTest);
+void MainMenu::helpHandle() {
+	std::cout << "help pressed" << std::endl;
+}
 
-	button2 = Button("Menu");
-	button2.setSize(400, 200);
-	button2.setPosition(5, 5);
-	button2.show();
-	button2.setMouseUpHandle(printTest);
+void MainMenu::creditsHandle() {
+	std::cout << "credits pressed" << std::endl;
+}
 
-	button3 = Button("Menu");
-	button3.setSize(50, 100);
-	button3.setPosition(700, 350);
-	button3.show();
-	button3.setMouseUpHandle(printTest);
+MainMenu::~MainMenu() {
+	SDL_DestroyTexture(titleTexture);
+	TTF_CloseFont(titleFont);
+}
 
-	button4 = Button("Menu");
-	button4.setSize(200, 200);
-	button4.setPosition(50, 250);
-	button4.show();
-	button4.setMouseUpHandle(printTest);
+MainMenu::MainMenu(Engine& engine) : GameState(engine), playBtn(Button("Play")),
+									 helpBtn(Button("Help")), creditsBtn(Button("Credits")),
+									 titleTexture(nullptr), titleFont(nullptr),
+									 titleTextureWidth(0), titleTextureHeight(0) {
+	playBtn.setSize(200, 75);
+	helpBtn.setSize(200, 75);
+	creditsBtn.setSize(200, 75);
 
-	registerClickable(&button1);
-	registerClickable(&button2);
-	registerClickable(&button3);
-	registerClickable(&button4);
-	registerHoverable(&button1);
-	registerHoverable(&button2);
-	registerHoverable(&button3);
-	registerHoverable(&button4);
+	playBtn.setPosition(400, 155);
+	helpBtn.setPosition(400, 265);
+	creditsBtn.setPosition(400, 375);
 
+	playBtn.setMouseUpHandle(playHandle);
+	helpBtn.setMouseUpHandle(helpHandle);
+	creditsBtn.setMouseUpHandle(creditsHandle);
+
+	playBtn.show();
+	helpBtn.show();
+	creditsBtn.show();
+
+	registerClickable(&playBtn);
+	registerClickable(&helpBtn);
+	registerClickable(&creditsBtn);
+	registerHoverable(&playBtn);
+	registerHoverable(&helpBtn);
+	registerHoverable(&creditsBtn);
+
+	titleFont = TTF_OpenFont((SDLUtils::getResourceDirPath("fonts") + "pixelFont.ttf").c_str(), 64);
+
+	if (!titleFont) SDLUtils::error("MainMenu::constructor TTF_OpenFont");
+
+	SDL_Surface* surface = TTF_RenderText_Blended(titleFont, "End of the Earth", SDL_Color{ 0,0,0,255 });
+
+	if (!surface) SDLUtils::error("MainMenu::constructor TTF_RenderText");
+
+	titleTexture = SDL_CreateTextureFromSurface(engine.getRenderer(), surface);
+	SDL_QueryTexture(titleTexture, NULL, NULL, &titleTextureWidth, &titleTextureHeight);
+	SDL_FreeSurface(surface);
 }
 
 void MainMenu::drawFrame() {
-	button1.draw(engine.getRenderer());
-	button2.draw(engine.getRenderer());
-	button3.draw(engine.getRenderer());
-	button4.draw(engine.getRenderer());
+	SDL_Renderer* renderer = engine.getRenderer();
+	SDL_Rect skyRect{ 0,0, 1000, 355 };
+	SDL_Rect grassRect{ 0,355, 1000, 30 };
+	SDL_Rect dirtRect{ 0,385, 1000, 150 };
+	SDL_Rect titleRect{ 500 - titleTextureWidth / 2, 25, titleTextureWidth, titleTextureHeight };
+	// draw sky
+	SDL_SetRenderDrawColor(renderer, 135, 206, 235, 255);
+	SDL_RenderFillRect(renderer, &skyRect);
+
+	// draw grass
+	SDL_SetRenderDrawColor(renderer, 124, 200, 0, 255);
+	SDL_RenderFillRect(renderer, &grassRect);
+
+	// draw dirt
+	SDL_SetRenderDrawColor(renderer, 131, 101, 57, 255);
+	SDL_RenderFillRect(renderer, &dirtRect);
+
+	// draw title
+	SDL_RenderCopy(renderer, titleTexture, NULL, &titleRect);
+
+	// draw buttons
+	playBtn.draw(engine.getRenderer());
+	helpBtn.draw(engine.getRenderer());
+	creditsBtn.draw(engine.getRenderer());
 	SDL_SetRenderDrawColor(engine.getRenderer(), 255, 128, 128, 255);
 }
