@@ -6,6 +6,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <string>
 #include <cmath>
+#include <functional>
 #include "SDLUtils.h"
 #include "Drawable.h"
 #include "IClickable.h"
@@ -41,10 +42,10 @@ class Button : public Drawable, public IClickable, public IHoverable {
 		SDL_Color clickColor;
 
 		SDL_Texture* textTexture; // so texture does not have to be rendered every frame
-		void (*downHandler) ();
-		void (*upHandler) ();
-		void (*hoverStartHandler) ();
-		void (*hoverEndHandler) ();
+		std::function<void()> downHandler;
+		std::function<void()> upHandler;
+		std::function<void()> hoverStartHandler;
+		std::function<void()> hoverEndHandler;
 		std::string buttonText;
 		void createTextTexture(SDL_Renderer* renderer); // helper function for generating texture
 		
@@ -60,10 +61,10 @@ class Button : public Drawable, public IClickable, public IHoverable {
 		~Button();
 		void setPosition(int xPos, int yPos);
 		void setSize(int width, int height);
-		void setMouseDownHandle(void (*func) ());
-		void setMouseUpHandle(void (*func) ());
-		void setHoverStartHandle(void (*func) ());
-		void setHoverEndHandle(void (*func) ());
+		void setMouseDownHandle(std::function<void()> func);
+		void setMouseUpHandle(std::function<void()> func);
+		void setHoverStartHandle(std::function<void()> func);
+		void setHoverEndHandle(std::function<void()> func);
 		void setBorder(SDL_Color color, int size);
 
 		// required functions

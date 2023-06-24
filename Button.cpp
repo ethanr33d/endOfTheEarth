@@ -47,19 +47,19 @@ void Button::setBorder(SDL_Color color, int size) {
 	borderSize = size;
 }
 
-void Button::setMouseDownHandle(void (*func) ()) {
+void Button::setMouseDownHandle(std::function<void()> func) {
 	downHandler = func;
 }
 
-void Button::setMouseUpHandle(void (*func) ()) {
+void Button::setMouseUpHandle(std::function<void()> func) {
 	upHandler = func;
 }
 
-void Button::setHoverStartHandle(void (*func) ()) {
+void Button::setHoverStartHandle(std::function<void()> func) {
 	hoverStartHandler = func;
 }
 
-void Button::setHoverEndHandle(void (*func) ()) {
+void Button::setHoverEndHandle(std::function<void()> func) {
 	hoverEndHandler = func;
 }
 
