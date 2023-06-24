@@ -1,6 +1,7 @@
 // Interface that defines required functions for game states
 #pragma once
 
+#include <functional>
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_ttf.h"
 #include "Engine.h"
