@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "IGameState.h"
+#include "GameState.h"
 #include "Button.h"
 
-class MainMenu : public IGameState {
+class MainMenu : public GameState {
 	private:
 		Button button1;
 		Button button2;

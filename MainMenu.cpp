@@ -3,7 +3,7 @@ void printTest() {
 	std::cout << "test" << std::endl;
 }
 
-MainMenu::MainMenu(Engine& engine) : IGameState(engine) {
+MainMenu::MainMenu(Engine& engine) : GameState(engine) {
 	// test case
 	button1 = Button("Menu");
 	button1.setSize(200, 100);
@@ -29,10 +29,15 @@ MainMenu::MainMenu(Engine& engine) : IGameState(engine) {
 	button4.show();
 	button4.setMouseUpHandle(printTest);
 
-	engine.registerNewClickable(&button1);
-	engine.registerNewClickable(&button2);
-	engine.registerNewClickable(&button3);
-	engine.registerNewClickable(&button4);
+	registerClickable(&button1);
+	registerClickable(&button2);
+	registerClickable(&button3);
+	registerClickable(&button4);
+	registerHoverable(&button1);
+	registerHoverable(&button2);
+	registerHoverable(&button3);
+	registerHoverable(&button4);
+
 }
 
 void MainMenu::drawFrame() {
