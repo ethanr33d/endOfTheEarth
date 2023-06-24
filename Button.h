@@ -23,12 +23,14 @@ class Button : public Drawable, public IClickable, public IHoverable {
 		inline static const int DEFAULT_FONT_SIZE = 60; // text is scaled from here to fit button width
 		inline static const int TEXT_PADDING = 5;
 		inline static const SDL_Color DEFAULT_HOVER_COLOR {128, 128, 128, 255};
+		inline static const SDL_Color DEFAULT_CLICK_COLOR {200, 200, 200, 255};
 
 		int x;
 		int y;
 		int w;
 		int h;
 		bool hover;
+		bool clicking;
 
 		SDL_Color borderColor;
 		int borderSize;
@@ -36,6 +38,7 @@ class Button : public Drawable, public IClickable, public IHoverable {
 		TTF_Font* font;
 		SDL_Color fontColor;
 		SDL_Color hoverColor;
+		SDL_Color clickColor;
 
 		SDL_Texture* textTexture; // so texture does not have to be rendered every frame
 		void (*downHandler) ();
@@ -46,10 +49,11 @@ class Button : public Drawable, public IClickable, public IHoverable {
 		void createTextTexture(SDL_Renderer* renderer); // helper function for generating texture
 		
 	public:
-		Button(std::string text = "") : x{ 0 }, y{ 0 }, w{ 0 }, h{ 0 }, hover{false},
-			borderColor{ DEFAULT_BORDER_COLOR }, borderSize{ DEFAULT_BORDER_SIZE },
-			bgColor{ DEFAULT_BG_COLOR }, font{ nullptr }, fontColor{DEFAULT_FONT_COLOR},
-			hoverColor{ DEFAULT_HOVER_COLOR }, textTexture{ nullptr }, downHandler{ nullptr },
+		Button(std::string text = "") : x{ 0 }, y{ 0 }, w{ 0 }, h{ 0 }, hover{false}, 
+			clicking{false}, borderColor{ DEFAULT_BORDER_COLOR }, 
+			borderSize{ DEFAULT_BORDER_SIZE },bgColor{ DEFAULT_BG_COLOR }, 
+			font{ nullptr }, fontColor{DEFAULT_FONT_COLOR}, hoverColor{ DEFAULT_HOVER_COLOR }, 
+			clickColor{ DEFAULT_CLICK_COLOR }, textTexture {nullptr}, downHandler{ nullptr },
 			upHandler{ nullptr }, hoverStartHandler{ nullptr }, hoverEndHandler{ nullptr }, 
 			buttonText {text} {};
 

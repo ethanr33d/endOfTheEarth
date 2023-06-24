@@ -64,10 +64,14 @@ void Button::setHoverEndHandle(void (*func) ()) {
 }
 
 void Button::mouseDown() {
+	clicking = true;
+
 	if (downHandler) downHandler();
 }
 
 void Button::mouseUp() {
+	clicking = false;
+
 	if (upHandler) upHandler();
 }
 
@@ -79,6 +83,7 @@ void Button::mouseEnter() {
 
 void Button::mouseLeave() {
 	hover = false;
+	clicking = false;
 
 	if (hoverEndHandler) hoverEndHandler();
 }
@@ -108,7 +113,10 @@ void Button::draw(SDL_Renderer* renderer) {
 	SDL_RenderFillRect(renderer, &borderRect);
 
 	// create background
-	if (hover) {
+	if (clicking) {
+		SDL_SetRenderDrawColor(renderer, clickColor.r, clickColor.g, clickColor.b, clickColor.a);
+	}
+	else if (hover) {
 		SDL_SetRenderDrawColor(renderer, hoverColor.r, hoverColor.g, hoverColor.b, hoverColor.a);
 	}
 	else {
