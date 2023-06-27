@@ -143,15 +143,20 @@
   <ItemGroup>
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="TextNode.cpp" />
+    <ClCompile Include="UIFrame.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="HelpScreen.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="SDLUtils.cpp" />
+    <ClCompile Include="TextLabel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
     <ClInclude Include="Engine.h" />
+    <ClInclude Include="TextNode.h" />
+    <ClInclude Include="UIFrame.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="HelpScreen.h" />
     <ClInclude Include="IClickable.h" />
@@ -159,6 +164,7 @@
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="SDLUtils.h" />
+    <ClInclude Include="TextLabel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
