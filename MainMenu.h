@@ -4,28 +4,21 @@
 
 #include "GameState.h"
 #include "Button.h"
+#include "SDLUtils.h"
 
 class MainMenu : public GameState {
 	private:
+		inline static const std::string TITLE_FONT = SDLUtils::getResourceDirPath("fonts") + "pixelFont.ttf";
+		inline static const std::string GAME_NAME = "End of the Earth";
 		Button playBtn;
 		Button helpBtn;
 		Button creditsBtn;
-		SDL_Texture* titleTexture;
-		int titleTextureWidth;
-		int titleTextureHeight;
-		TTF_Font* titleFont;
+		TextNode title;
 
 		void playHandle();
 		void helpHandle();
 		void creditsHandle();
 	public:
-		~MainMenu();
 		MainMenu(Engine& engine);
 		virtual void drawFrame();
 };
-
-//TODO:
-//make base menu
-//help screen
-//credits screen
-//character movement
