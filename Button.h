@@ -1,4 +1,4 @@
-// Generic button class
+// Generic button class. Special case of a TextLabel able to respond to click and hover events
 
 #pragma once
 

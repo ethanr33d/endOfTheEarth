@@ -1,7 +1,5 @@
 #include "Button.h"
 
-// cleanup
-
 void Button::setMouseDownHandle(const std::function<void()>& func) {
 	downHandler = func;
 }
