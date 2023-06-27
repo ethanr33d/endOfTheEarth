@@ -7,8 +7,8 @@
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_ttf.h"
 #include "SDLUtils.h"
-#include "IClickable.h"
-#include "IHoverable.h"
+#include "UI/IClickable.h"
+#include "UI/IHoverable.h"
 
 class GameState; // forward declaration for circular dependency
 

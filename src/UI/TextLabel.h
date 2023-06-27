@@ -3,7 +3,7 @@
 
 #include <string>
 #include "SDL2/SDL_ttf.h"
-#include "SDLUtils.h"
+#include "../SDLUtils.h"
 #include "UIFrame.h"
 #include "TextNode.h"
 

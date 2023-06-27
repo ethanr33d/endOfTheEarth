@@ -2,7 +2,7 @@
 #include  "SDL2/SDL.h"
 #include "SDL2/SDL_ttf.h"
 #include "SDLUtils.h"
-#include "Button.h"
+#include "UI/Button.h"
 #include "Engine.h"
 #include "MainMenu.h"
 

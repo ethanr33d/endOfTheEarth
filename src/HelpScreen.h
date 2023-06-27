@@ -2,7 +2,7 @@
 #pragma once
 
 #include "GameState.h"
-#include "Button.h"
+#include "UI/Button.h"
 
 class HelpScreen : public GameState {
 	private:

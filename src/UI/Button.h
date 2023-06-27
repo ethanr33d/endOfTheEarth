@@ -7,7 +7,7 @@
 #include <string>
 #include <cmath>
 #include <functional>
-#include "SDLUtils.h"
+#include "../SDLUtils.h"
 #include "TextLabel.h"
 #include "IClickable.h"
 #include "IHoverable.h"

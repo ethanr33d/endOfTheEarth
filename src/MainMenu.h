@@ -3,7 +3,7 @@
 #pragma once
 
 #include "GameState.h"
-#include "Button.h"
+#include "UI/Button.h"
 #include "SDLUtils.h"
 
 class MainMenu : public GameState {
