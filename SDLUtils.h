@@ -4,6 +4,7 @@
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
+#include "SDL2/SDL_ttf.h"
 #include <iostream>
 
 namespace SDLUtils {
@@ -24,4 +25,9 @@ namespace SDLUtils {
 	// if width and height are not given the texture size is used
 	void renderTexture(SDL_Texture* texture, SDL_Renderer* renderer, int x, int y);
 	void renderTexture(SDL_Texture* texture, SDL_Renderer* renderer, int x, int y, int w, int h);
+
+	// create a text texture from given font. Text is black by default
+	SDL_Texture* createTextTexture(SDL_Renderer* renderer, TTF_Font* font, const std::string& msg,
+								   const SDL_Color& = {0,0,0, 255});
+
 }

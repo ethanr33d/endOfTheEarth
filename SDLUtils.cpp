@@ -61,3 +61,28 @@ void SDLUtils::renderTexture(SDL_Texture* texture, SDL_Renderer* renderer, int x
 
 	SDL_RenderCopy(renderer, texture, NULL, &newRect);
 }
+
+SDL_Texture* SDLUtils::createTextTexture(SDL_Renderer* renderer, TTF_Font* font, const std::string& text,
+										 const SDL_Color& color) {
+	if (!font) {
+		error("SDLUtils::createTextTexture invalid font");
+	}
+	
+	// Text render functions do no allow empty strings
+	SDL_Surface* textSurface = TTF_RenderText_Blended(font, (text == "" ? " " : text).c_str(), color);
+
+	if (!textSurface) {
+		SDLUtils::error("SDLUtils::createTextTexture RenderTextBlend");
+		return nullptr;
+	}
+
+	SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+	SDL_FreeSurface(textSurface);
+
+	if (!textTexture) {
+		SDLUtils::error("SDLUtils::createTextTexture CreateTextureFromSurface");
+		return nullptr;
+	}
+	
+	return textTexture;
+}
