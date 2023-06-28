@@ -26,8 +26,9 @@ namespace SDLUtils {
 	void renderTexture(SDL_Texture* texture, SDL_Renderer* renderer, int x, int y);
 	void renderTexture(SDL_Texture* texture, SDL_Renderer* renderer, int x, int y, int w, int h);
 
-	// create a text texture from given font. Text is black by default
+	// create a text texture from given font. Text is black and non wrapped by default. Uses highest
+	// quality text rendering
 	SDL_Texture* createTextTexture(SDL_Renderer* renderer, TTF_Font* font, const std::string& msg,
-								   const SDL_Color& = {0,0,0, 255});
+								   const SDL_Color& = {0,0,0, 255}, const bool wrapped=false);
 
 }
