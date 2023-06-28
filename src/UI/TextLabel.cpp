@@ -11,7 +11,7 @@ void TextLabel::draw(SDL_Renderer* renderer) {
 	double scalar = fmin(static_cast<double>(w - TEXT_PADDING * 2) / textRect.w,
 		static_cast<double>(h - TEXT_PADDING * 2) / textRect.h);
 
-	labelText.setSize(textRect.w * scalar, textRect.h * scalar);
+	labelText.setSize(static_cast<int>(textRect.w * scalar), static_cast<int>(textRect.h * scalar));
 	labelText.setPosition((x + w / 2) - (textRect.w / 2), (y + h / 2) - (textRect.h / 2));
 	
 	labelText.draw(renderer);
