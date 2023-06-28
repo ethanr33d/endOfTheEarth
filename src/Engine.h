@@ -61,6 +61,10 @@ class Engine {
 		// change the games current state. Must use this before starting engine to set initial state
 		void pushGameState(GameState* state);
 
+		// pop game state from stack and return to previous state. Errors if there would be no state
+		// to go back to
+		void popGameState();
+
 		// Handle relevant user inputs / events for current game state
 		// Returns bool which indicates whether application should quit
 		bool handleEvents();

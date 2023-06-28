@@ -58,8 +58,21 @@ bool Engine::initializeComponents(const std::string& appName) {
 
 void Engine::pushGameState(GameState* state) {
 	gameStates.push(state);
+
+	// set tracked elements to new state
 	clickableElements = state->getClickableElements();
 	hoverableElements = state->getHoverableElements();
+}
+
+void Engine::popGameState() {
+	if (gameStates.size() <= 1) std::cerr << "No game state to pop back to" << std::endl;
+
+	gameStates.pop();
+
+	// reset tracked elements to old state
+	clickableElements = gameStates.top()->getClickableElements();
+	hoverableElements = gameStates.top()->getHoverableElements();
+
 }
 
 bool Engine::handleEvents() {
