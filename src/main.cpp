@@ -4,7 +4,7 @@
 #include "SDLUtils.h"
 #include "UI/Button.h"
 #include "Engine.h"
-#include "MainMenu.h"
+#include "HelpScreen.h"
 
 // Constants
 const char* GAME_NAME = "End of the Earth";
@@ -17,7 +17,7 @@ int main(int, char**) {
 		return 1;
 	}
 
-	MainMenu initState(gameEngine);
+	HelpScreen initState(gameEngine);
 	gameEngine.pushGameState(&initState);
 
 	bool readyToQuit = false;
