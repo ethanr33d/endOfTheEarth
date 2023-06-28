@@ -18,6 +18,7 @@ class TextNode : public Drawable {
 		TTF_Font* font;
 		int fontSize;
 		SDL_Color fontColor;
+		bool wrapped;
 		void createTextTexture(SDL_Renderer* renderer); // helper function for generating texture
 	public:
 		~TextNode();
@@ -28,6 +29,6 @@ class TextNode : public Drawable {
 		void setFontSize(const int size);
 		void setText(const std::string& text);
 		void setFont(const std::string& font, int fontSize);
-		
+		void setWrapped(const bool wrap);
 		virtual void draw(SDL_Renderer* renderer);
 };

@@ -6,7 +6,7 @@ void TextNode::createTextTexture(SDL_Renderer* renderer) {
 		setFont(DEFAULT_FONT, DEFAULT_FONT_SIZE);
 	}
 
-	textTexture = SDLUtils::createTextTexture(renderer, font, nodeText.c_str(), fontColor);
+	textTexture = SDLUtils::createTextTexture(renderer, font, nodeText.c_str(), fontColor, wrapped);
 
 	SDL_SetTextureScaleMode(textTexture, SDL_ScaleModeBest); // for better text scaling
 }
@@ -18,7 +18,7 @@ TextNode::~TextNode() {
 
 TextNode::TextNode(const std::string& text, const std::string& fontFile, const int fontSize) : 
 		nodeText{ text }, textTexture{ nullptr }, font{ nullptr },  fontSize{fontSize},
-		fontColor{ DEFAULT_FONT_COLOR } { 
+		fontColor{ DEFAULT_FONT_COLOR }, wrapped{ false } {
 	// open font so text dimensions can be computed, only render texture when it needs to be drawn
 	setFont(fontFile, fontSize);
 	TTF_SizeText(font, nodeText.c_str(), &w, &h);
@@ -56,6 +56,10 @@ void TextNode::setFont(const std::string& file, int fontSize) {
 	if (!font) {
 		SDLUtils::error("TextNode::setFont OpenFont");
 	}
+}
+
+void TextNode::setWrapped(const bool wrap) {
+	wrapped = wrap;
 }
 
 void TextNode::draw(SDL_Renderer* renderer) {
