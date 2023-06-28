@@ -47,6 +47,20 @@ MainMenu::MainMenu(Engine& engine) : GameState(engine), playBtn(Button("Play")),
 
 void MainMenu::drawFrame() {
 	SDL_Renderer* renderer = engine.getRenderer();
+	
+	// draw default background
+	drawDefaultBackground(renderer);
+
+	// draw title
+	title.draw(renderer);
+
+	// draw buttons
+	playBtn.draw(engine.getRenderer());
+	helpBtn.draw(engine.getRenderer());
+	creditsBtn.draw(engine.getRenderer());
+}
+
+void MainMenu::drawDefaultBackground(SDL_Renderer* renderer) {
 	SDL_Rect skyRect{ 0,0, 1000, 355 };
 	SDL_Rect grassRect{ 0,355, 1000, 30 };
 	SDL_Rect dirtRect{ 0,385, 1000, 150 };
@@ -62,12 +76,4 @@ void MainMenu::drawFrame() {
 	// draw dirt
 	SDL_SetRenderDrawColor(renderer, 131, 101, 57, 255);
 	SDL_RenderFillRect(renderer, &dirtRect);
-
-	// draw title
-	title.draw(renderer);
-
-	// draw buttons
-	playBtn.draw(engine.getRenderer());
-	helpBtn.draw(engine.getRenderer());
-	creditsBtn.draw(engine.getRenderer());
 }
