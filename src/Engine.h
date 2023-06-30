@@ -12,6 +12,8 @@
 
 class GameState; // forward declaration for circular dependency
 
+enum GAME_STATE{MAIN_MENU, HELP_SCREEN};
+
 class Engine {
 	private:
 		/* Engine Constants */
@@ -27,15 +29,19 @@ class Engine {
 		// Renderer constants
 		const int RENDERER_FLAGS = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 
+		/* private member variables */
+
 		// Engine member variables
-		std::set<IClickable*>* clickableElements;
-		std::set<IHoverable*>* hoverableElements;
+		std::set<IClickable*>* clickableElements; 
+		std::set<IHoverable*>* hoverableElements; // elements engine checks for events
+
 		std::stack<GameState*> gameStates;
 		SDL_Window* mainWindow;
 		SDL_Renderer* renderer;
-
+		
 		// Engine state variables
-		std::set<IHoverable*> currentlyHoveredElements;
+		std::set<IHoverable*> currentlyHoveredElements; 
+		bool changingState; // used to invalidate event loop after state changes
 
 		/* private member methods */
 
@@ -59,7 +65,7 @@ class Engine {
 		bool initializeComponents(const std::string& appName = "");
 
 		// change the games current state. Must use this before starting engine to set initial state
-		void pushGameState(GameState* state);
+		void pushGameState(GAME_STATE state);
 
 		// pop game state from stack and return to previous state. Errors if there would be no state
 		// to go back to

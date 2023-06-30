@@ -1,9 +1,20 @@
 #include "Engine.h"
 #include "GameState.h"
+#include "MainMenu.h"
+#include "HelpScreen.h"
 
 // private member methods
 
 Engine::~Engine() {
+	// clean state memory
+	while (!gameStates.empty()) {
+		GameState* stateToRemove = gameStates.top();
+		gameStates.pop();
+
+		delete stateToRemove;
+	}
+
+	// close libraries
 	if (mainWindow) SDL_DestroyWindow(mainWindow);
 	if (renderer) SDL_DestroyRenderer(renderer);
 	TTF_Quit();
@@ -56,18 +67,33 @@ bool Engine::initializeComponents(const std::string& appName) {
 	return true;
 }
 
-void Engine::pushGameState(GameState* state) {
-	gameStates.push(state);
+void Engine::pushGameState(GAME_STATE state) {
+	GameState* newState;
+	switch (state) {
+		case MAIN_MENU:
+			newState = new MainMenu(*this);
+			break;
+		case HELP_SCREEN:
+			newState = new HelpScreen(*this);
+			break;
+	}
+
+	gameStates.push(newState);
+	changingState = true;
 
 	// set tracked elements to new state
-	clickableElements = state->getClickableElements();
-	hoverableElements = state->getHoverableElements();
+	clickableElements = newState->getClickableElements();
+	hoverableElements = newState->getHoverableElements();
 }
 
 void Engine::popGameState() {
 	if (gameStates.size() <= 1) std::cerr << "No game state to pop back to" << std::endl;
 
+	GameState* deadState = gameStates.top();
+
 	gameStates.pop();
+	changingState = true;
+	delete deadState; // release memory
 
 	// reset tracked elements to old state
 	clickableElements = gameStates.top()->getClickableElements();
@@ -77,6 +103,7 @@ void Engine::popGameState() {
 
 bool Engine::handleEvents() {
 	SDL_Event event{};
+	changingState = false; // fresh event loop
 
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
@@ -92,6 +119,8 @@ bool Engine::handleEvents() {
 				if (contained) {
 					if (event.type == SDL_MOUSEBUTTONDOWN) element->mouseDown();
 					if (event.type == SDL_MOUSEBUTTONUP) element->mouseUp();
+					
+					if (changingState) return false; // button press resulted in state change; abort
 				}
 			}
 			break;
@@ -113,6 +142,7 @@ bool Engine::handleEvents() {
 					if (mouseEntered) { // if mouseEntered has not already fired
 						currentlyHoveredElements.insert(element);
 						element->mouseEnter();
+						if (changingState) return false; // button call changed state; abort
 					}
 					
 				}
@@ -127,6 +157,8 @@ bool Engine::handleEvents() {
 					if (mouseLeft) {
 						currentlyHoveredElements.erase(element);
 						element->mouseLeave();
+
+						if (changingState) return false; // button call changed state; abort
 					}
 				}
 			}
