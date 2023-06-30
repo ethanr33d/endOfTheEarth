@@ -5,7 +5,7 @@ void MainMenu::playHandle() {
 }
 
 void MainMenu::helpHandle() {
-	std::cout << "help pressed" << std::endl;
+	engine.pushGameState(HELP_SCREEN);
 }
 
 void MainMenu::creditsHandle() {
