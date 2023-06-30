@@ -20,6 +20,7 @@ class GameState {
 	public:
 		GameState(Engine& eng) : engine(eng) {};
 		virtual void drawFrame() = 0;
+		virtual ~GameState() {}; // so derived classes get properly destroyed
 		std::set<IClickable*>* getClickableElements();
 		std::set<IHoverable*>* getHoverableElements();
 };
