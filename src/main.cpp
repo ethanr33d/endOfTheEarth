@@ -17,8 +17,7 @@ int main(int, char**) {
 		return 1;
 	}
 
-	HelpScreen initState(gameEngine);
-	gameEngine.pushGameState(&initState);
+	gameEngine.pushGameState(MAIN_MENU);
 
 	bool readyToQuit = false;
 
