@@ -13,8 +13,10 @@ class TextLabel : public UIFrame {
 
 		TextNode m_labelText;
 	public:
-		TextLabel(const std::string& text = "");
+		TextLabel(SDL_Renderer* renderer, const std::string& text = "");
 
-		virtual void draw(SDL_Renderer* renderer);
+		virtual void setSize(int x, int y) override; // need to recompute text scalar on setSize
+		virtual void setPosition(int w, int h) override; // need to set position of text
+		virtual void draw();
 
 };
