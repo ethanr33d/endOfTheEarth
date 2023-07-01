@@ -16,6 +16,9 @@
     <Filter Include="Header Files\UI">
       <UniqueIdentifier>{c290b3cb-b72b-48f2-8664-96b9d67a7900}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\game">
+      <UniqueIdentifier>{2dfe893b-2b56-4e60-a513-e9604c45720e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Engine.h">
@@ -36,9 +39,6 @@
     <ClInclude Include="src\UI\Button.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
-    <ClInclude Include="src\UI\Drawable.h">
-      <Filter>Header Files\UI</Filter>
-    </ClInclude>
     <ClInclude Include="src\UI\IClickable.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
@@ -53,6 +53,21 @@
     </ClInclude>
     <ClInclude Include="src\UI\UIFrame.h">
       <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CreditsScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameLoading.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Drawable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\Player.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameData.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +100,15 @@
     </ClCompile>
     <ClCompile Include="src\UI\UIFrame.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CreditsScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameLoading.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\Player.cpp">
+      <Filter>Header Files\game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
