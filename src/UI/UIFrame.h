@@ -18,7 +18,8 @@ class UIFrame : public Drawable {
 		void setBorderSize(const int size);
 		void setBGColor(const SDL_Color& color);
 	public:
-		UIFrame() : m_borderColor{ DEFAULT_BORDER_COLOR }, m_borderSize{ DEFAULT_BORDER_SIZE }, 
-			m_bgColor{ DEFAULT_BG_COLOR } {};
-		virtual void draw(SDL_Renderer* renderer);
+		UIFrame(SDL_Renderer* renderer) : Drawable(renderer), m_borderColor{ DEFAULT_BORDER_COLOR },
+			m_borderSize{ DEFAULT_BORDER_SIZE }, m_bgColor{ DEFAULT_BG_COLOR } {};
+
+		virtual void draw();
 };
