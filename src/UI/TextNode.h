@@ -2,7 +2,7 @@
 #pragma once
 
 #include <string>
-#include "Drawable.h"
+#include "../Drawable.h"
 #include "../SDLUtils.h"
 
 class TextNode : public Drawable {
