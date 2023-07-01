@@ -13,6 +13,7 @@ class GameState {
 		Engine& m_engine;
 		std::set<IClickable*> m_clickableElements;
 		std::set<IHoverable*> m_hoverableElements;
+		std::set<IHoverable*> m_currentlyHoveredElements;
 
 		// must call these functions to register elements so engine knows to check them for events
 		void registerClickable(IClickable* element);
@@ -23,4 +24,5 @@ class GameState {
 		virtual ~GameState() {}; // so derived classes get properly destroyed
 		std::set<IClickable*>* getClickableElements();
 		std::set<IHoverable*>* getHoverableElements();
+		std::set<IHoverable*>* getCurrentlyHoveredElements();
 };

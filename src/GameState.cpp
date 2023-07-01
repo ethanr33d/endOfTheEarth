@@ -15,3 +15,7 @@ std::set<IClickable*>* GameState::getClickableElements() {
 std::set<IHoverable*>* GameState::getHoverableElements() {
 	return &m_hoverableElements;
 }
+
+std::set<IHoverable*>* GameState::getCurrentlyHoveredElements() {
+	return &m_currentlyHoveredElements;
+}
