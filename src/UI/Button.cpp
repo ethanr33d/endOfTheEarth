@@ -42,14 +42,14 @@ void Button::mouseLeave() {
 }
 
 SDL_Rect Button::getClickBox() {
-	return SDL_Rect{ m_x, m_y, m_w, m_h };
+	return m_bounds;
 }
 
 SDL_Rect Button::getHoverBox() {
-	return SDL_Rect{ m_x, m_y, m_w, m_h };
+	return m_bounds;
 }
 
-void Button::draw(SDL_Renderer* renderer) {
+void Button::draw() {
 	if (!m_shown) return;
 
 	// set correct background color
@@ -64,5 +64,5 @@ void Button::draw(SDL_Renderer* renderer) {
 	}
 
 	// button is a text label
-	TextLabel::draw(renderer);
+	TextLabel::draw();
 }

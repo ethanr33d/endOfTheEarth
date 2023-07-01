@@ -35,10 +35,11 @@ class Button : public TextLabel, public IClickable, public IHoverable {
 		std::function<void()> m_hoverEndHandler;
 		
 	public:
-		Button(const std::string& text = "") : TextLabel(text), m_hover{false}, m_clicking{false},
-			m_idleColor{DEFAULT_BG_COLOR}, m_hoverColor{ DEFAULT_HOVER_COLOR }, 
-			m_clickColor{ DEFAULT_CLICK_COLOR }, m_downHandler{ nullptr }, m_upHandler{ nullptr }, 
-			m_hoverStartHandler{ nullptr }, m_hoverEndHandler{ nullptr } {};
+		Button(SDL_Renderer* renderer, const std::string& text = "") : TextLabel(renderer, text), 
+			m_hover{false}, m_clicking{false}, m_idleColor{DEFAULT_BG_COLOR},
+			m_hoverColor{ DEFAULT_HOVER_COLOR }, m_clickColor{ DEFAULT_CLICK_COLOR }, 
+			m_downHandler{ nullptr }, m_upHandler{ nullptr }, m_hoverStartHandler{ nullptr },
+			m_hoverEndHandler{ nullptr } {};
 
 		void setMouseDownHandle(const std::function<void()>& func);
 		void setMouseUpHandle(const std::function<void()>& func);
@@ -53,5 +54,5 @@ class Button : public TextLabel, public IClickable, public IHoverable {
 
 		virtual SDL_Rect getClickBox();
 		virtual SDL_Rect getHoverBox();
-		virtual void draw(SDL_Renderer* renderer);
+		virtual void draw();
 };
