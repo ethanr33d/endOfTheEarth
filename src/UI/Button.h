@@ -22,23 +22,23 @@ class Button : public TextLabel, public IClickable, public IHoverable {
 		inline static const SDL_Color DEFAULT_HOVER_COLOR {128, 128, 128, 255};
 		inline static const SDL_Color DEFAULT_CLICK_COLOR {200, 200, 200, 255};
 
-		bool hover;
-		bool clicking;
+		bool m_hover;
+		bool m_clicking;
 
-		SDL_Color idleColor; // default color
-		SDL_Color hoverColor;
-		SDL_Color clickColor;
+		SDL_Color m_idleColor; // default color
+		SDL_Color m_hoverColor;
+		SDL_Color m_clickColor;
 
-		std::function<void()> downHandler;
-		std::function<void()> upHandler;
-		std::function<void()> hoverStartHandler;
-		std::function<void()> hoverEndHandler;
+		std::function<void()> m_downHandler;
+		std::function<void()> m_upHandler;
+		std::function<void()> m_hoverStartHandler;
+		std::function<void()> m_hoverEndHandler;
 		
 	public:
-		Button(const std::string& text = "") : TextLabel(text), hover{false}, clicking{false},
-			idleColor{DEFAULT_BG_COLOR}, hoverColor{ DEFAULT_HOVER_COLOR }, 
-			clickColor{ DEFAULT_CLICK_COLOR }, downHandler{ nullptr }, upHandler{ nullptr }, 
-			hoverStartHandler{ nullptr }, hoverEndHandler{ nullptr } {};
+		Button(const std::string& text = "") : TextLabel(text), m_hover{false}, m_clicking{false},
+			m_idleColor{DEFAULT_BG_COLOR}, m_hoverColor{ DEFAULT_HOVER_COLOR }, 
+			m_clickColor{ DEFAULT_CLICK_COLOR }, m_downHandler{ nullptr }, m_upHandler{ nullptr }, 
+			m_hoverStartHandler{ nullptr }, m_hoverEndHandler{ nullptr } {};
 
 		void setMouseDownHandle(const std::function<void()>& func);
 		void setMouseUpHandle(const std::function<void()>& func);

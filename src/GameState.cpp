@@ -1,17 +1,17 @@
 #include "GameState.h"
 
 void GameState::registerClickable(IClickable* element) {
-	clickableElements.insert(element);
+	m_clickableElements.insert(element);
 }
 
 void GameState::registerHoverable(IHoverable* element) {
-	hoverableElements.insert(element);
+	m_hoverableElements.insert(element);
 }
 
 std::set<IClickable*>* GameState::getClickableElements() {
-	return &clickableElements;
+	return &m_clickableElements;
 }
 
 std::set<IHoverable*>* GameState::getHoverableElements() {
-	return &hoverableElements;
+	return &m_hoverableElements;
 }

@@ -7,16 +7,16 @@
 
 Engine::~Engine() {
 	// clean state memory
-	while (!gameStates.empty()) {
-		GameState* stateToRemove = gameStates.top();
-		gameStates.pop();
+	while (!m_gameStates.empty()) {
+		GameState* stateToRemove = m_gameStates.top();
+		m_gameStates.pop();
 
 		delete stateToRemove;
 	}
 
 	// close libraries
-	if (mainWindow) SDL_DestroyWindow(mainWindow);
-	if (renderer) SDL_DestroyRenderer(renderer);
+	if (m_mainWindow) SDL_DestroyWindow(m_mainWindow);
+	if (m_renderer) SDL_DestroyRenderer(m_renderer);
 	TTF_Quit();
 	SDL_Quit();
 }
@@ -43,7 +43,7 @@ bool Engine::initializeComponents(const std::string& appName) {
 		return false;
 	}
 	// initialize our window
-	mainWindow = SDL_CreateWindow(appName.c_str(),
+	m_mainWindow = SDL_CreateWindow(appName.c_str(),
 		WINDOW_DEFAULT_XPOS,
 		WINDOW_DEFAULT_YPOS,
 		WINDOW_WIDTH,
@@ -51,15 +51,15 @@ bool Engine::initializeComponents(const std::string& appName) {
 		WINDOW_FLAGS
 	);
 
-	if (!mainWindow) {
+	if (!m_mainWindow) {
 		SDLUtils::error("SDL_CreateWindow");
 		return false;
 	}
 
 	// Create rendering context
-	renderer = SDL_CreateRenderer(mainWindow, -1, RENDERER_FLAGS);
+	m_renderer = SDL_CreateRenderer(m_mainWindow, -1, RENDERER_FLAGS);
 
-	if (!renderer) {
+	if (!m_renderer) {
 		SDLUtils::error("SDL_CreateRenderer");
 		return false;
 	}
@@ -78,32 +78,32 @@ void Engine::pushGameState(GAME_STATE state) {
 			break;
 	}
 
-	gameStates.push(newState);
-	changingState = true;
+	m_gameStates.push(newState);
+	m_changingState = true;
 
 	// set tracked elements to new state
-	clickableElements = newState->getClickableElements();
-	hoverableElements = newState->getHoverableElements();
+	m_clickableElements = newState->getClickableElements();
+	m_hoverableElements = newState->getHoverableElements();
 }
 
 void Engine::popGameState() {
-	if (gameStates.size() <= 1) std::cerr << "No game state to pop back to" << std::endl;
+	if (m_gameStates.size() <= 1) std::cerr << "No game state to pop back to" << std::endl;
 
-	GameState* deadState = gameStates.top();
+	GameState* deadState = m_gameStates.top();
 
-	gameStates.pop();
-	changingState = true;
+	m_gameStates.pop();
+	m_changingState = true;
 	delete deadState; // release memory
 
 	// reset tracked elements to old state
-	clickableElements = gameStates.top()->getClickableElements();
-	hoverableElements = gameStates.top()->getHoverableElements();
+	m_clickableElements = m_gameStates.top()->getClickableElements();
+	m_hoverableElements = m_gameStates.top()->getHoverableElements();
 
 }
 
 bool Engine::handleEvents() {
 	SDL_Event event{};
-	changingState = false; // fresh event loop
+	m_changingState = false; // fresh event loop
 
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
@@ -112,7 +112,7 @@ bool Engine::handleEvents() {
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 		case SDL_MOUSEBUTTONUP:
-			for (IClickable* element : *clickableElements) {
+			for (IClickable* element : *m_clickableElements) {
 				SDL_Rect elementBox = element->getClickBox();
 				bool contained = pointContainedInBox(elementBox, event.button.x, event.button.y);
 
@@ -120,14 +120,14 @@ bool Engine::handleEvents() {
 					if (event.type == SDL_MOUSEBUTTONDOWN) element->mouseDown();
 					if (event.type == SDL_MOUSEBUTTONUP) element->mouseUp();
 					
-					if (changingState) return false; // button press resulted in state change; abort
+					if (m_changingState) return false; // button press resulted in state change; abort
 				}
 			}
 			break;
 		case SDL_MOUSEMOTION:
 
 			// hover events (pseudo mouseEnter & mouseLeave events)
-			for (IHoverable* element : *hoverableElements) {
+			for (IHoverable* element : *m_hoverableElements) {
 				SDL_Rect elementBox = element->getHoverBox();
 				bool contained = pointContainedInBox(elementBox, event.motion.x, event.motion.y);
 
@@ -135,14 +135,14 @@ bool Engine::handleEvents() {
 					bool mouseEntered = true;
 
 					// check if mouse already hovering over element
-					if (currentlyHoveredElements.find(element) != currentlyHoveredElements.end()) {
+					if (m_currentlyHoveredElements.find(element) != m_currentlyHoveredElements.end()) {
 						mouseEntered = false; // mouseEntered event has already fired	
 					}
 					
 					if (mouseEntered) { // if mouseEntered has not already fired
-						currentlyHoveredElements.insert(element);
+						m_currentlyHoveredElements.insert(element);
 						element->mouseEnter();
-						if (changingState) return false; // button call changed state; abort
+						if (m_changingState) return false; // button call changed state; abort
 					}
 					
 				}
@@ -150,15 +150,15 @@ bool Engine::handleEvents() {
 					bool mouseLeft = false;
 
 					// check to see if we are tracking element for a leave event
-					if (currentlyHoveredElements.find(element) != currentlyHoveredElements.end()) {
+					if (m_currentlyHoveredElements.find(element) != m_currentlyHoveredElements.end()) {
 						mouseLeft = true;
 					}
 
 					if (mouseLeft) {
-						currentlyHoveredElements.erase(element);
+						m_currentlyHoveredElements.erase(element);
 						element->mouseLeave();
 
-						if (changingState) return false; // button call changed state; abort
+						if (m_changingState) return false; // button call changed state; abort
 					}
 				}
 			}
@@ -169,17 +169,17 @@ bool Engine::handleEvents() {
 }
 
 void Engine::renderFrame() {
-	gameStates.top()->drawFrame();
-	SDL_RenderPresent(renderer);
-	SDL_RenderClear(renderer);
+	m_gameStates.top()->drawFrame();
+	SDL_RenderPresent(m_renderer);
+	SDL_RenderClear(m_renderer);
 }
 
 void Engine::cleanup() {
-	while (!gameStates.empty()) {
-		gameStates.pop();
+	while (!m_gameStates.empty()) {
+		m_gameStates.pop();
 	}
 }
 
 SDL_Renderer* Engine::getRenderer() {
-	return renderer;
+	return m_renderer;
 }

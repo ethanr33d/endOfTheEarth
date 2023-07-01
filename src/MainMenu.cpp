@@ -5,59 +5,59 @@ void MainMenu::playHandle() {
 }
 
 void MainMenu::helpHandle() {
-	engine.pushGameState(HELP_SCREEN);
+	m_engine.pushGameState(HELP_SCREEN);
 }
 
 void MainMenu::creditsHandle() {
 	std::cout << "credits pressed" << std::endl;
 }
 
-MainMenu::MainMenu(Engine& engine) : GameState(engine), playBtn(Button("Play")),
-	helpBtn(Button("Help")), creditsBtn(Button("Credits")), title(TextNode(GAME_NAME)) {
+MainMenu::MainMenu(Engine& engine) : GameState(engine), m_playBtn(Button("Play")),
+	m_helpBtn(Button("Help")), m_creditsBtn(Button("Credits")), m_title(TextNode(GAME_NAME)) {
 	// draw title
-	title.setFont(TITLE_FONT, 64);
-	SDL_Rect titleBounds = title.getBounds();
+	m_title.setFont(TITLE_FONT, 64);
+	SDL_Rect titleBounds = m_title.getBounds();
 
-	title.setPosition(500 - titleBounds.w / 2, 25); // center horizontally
-	title.show();
+	m_title.setPosition(500 - titleBounds.w / 2, 25); // center horizontally
+	m_title.show();
 	// draw buttons
-	playBtn.setSize(200, 75);
-	helpBtn.setSize(200, 75);
-	creditsBtn.setSize(200, 75);
+	m_playBtn.setSize(200, 75);
+	m_helpBtn.setSize(200, 75);
+	m_creditsBtn.setSize(200, 75);
 
-	playBtn.setPosition(400, 155);
-	helpBtn.setPosition(400, 265);
-	creditsBtn.setPosition(400, 375);
+	m_playBtn.setPosition(400, 155);
+	m_helpBtn.setPosition(400, 265);
+	m_creditsBtn.setPosition(400, 375);
 
-	playBtn.setMouseUpHandle(std::bind(&MainMenu::playHandle, this));
-	helpBtn.setMouseUpHandle(std::bind(&MainMenu::helpHandle, this));
-	creditsBtn.setMouseUpHandle(std::bind(&MainMenu::creditsHandle, this));
+	m_playBtn.setMouseUpHandle(std::bind(&MainMenu::playHandle, this));
+	m_helpBtn.setMouseUpHandle(std::bind(&MainMenu::helpHandle, this));
+	m_creditsBtn.setMouseUpHandle(std::bind(&MainMenu::creditsHandle, this));
 
-	playBtn.show();
-	helpBtn.show();
-	creditsBtn.show();
+	m_playBtn.show();
+	m_helpBtn.show();
+	m_creditsBtn.show();
 
-	registerClickable(&playBtn);
-	registerClickable(&helpBtn);
-	registerClickable(&creditsBtn);
-	registerHoverable(&playBtn);
-	registerHoverable(&helpBtn);
-	registerHoverable(&creditsBtn);
+	registerClickable(&m_playBtn);
+	registerClickable(&m_helpBtn);
+	registerClickable(&m_creditsBtn);
+	registerHoverable(&m_playBtn);
+	registerHoverable(&m_helpBtn);
+	registerHoverable(&m_creditsBtn);
 }
 
 void MainMenu::drawFrame() {
-	SDL_Renderer* renderer = engine.getRenderer();
+	SDL_Renderer* renderer = m_engine.getRenderer();
 	
 	// draw default background
 	drawDefaultBackground(renderer);
 
 	// draw title
-	title.draw(renderer);
+	m_title.draw(renderer);
 
 	// draw buttons
-	playBtn.draw(engine.getRenderer());
-	helpBtn.draw(engine.getRenderer());
-	creditsBtn.draw(engine.getRenderer());
+	m_playBtn.draw(m_engine.getRenderer());
+	m_helpBtn.draw(m_engine.getRenderer());
+	m_creditsBtn.draw(m_engine.getRenderer());
 }
 
 void MainMenu::drawDefaultBackground(SDL_Renderer* renderer) {

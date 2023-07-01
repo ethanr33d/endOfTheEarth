@@ -11,9 +11,9 @@ class TextLabel : public UIFrame {
 	protected:
 		inline static const int TEXT_PADDING = 5;
 
-		TextNode labelText;
+		TextNode m_labelText;
 	public:
-		TextLabel(const std::string& text = "") : labelText{ TextNode(text) } { labelText.show(); };
+		TextLabel(const std::string& text = "");
 
 		virtual void draw(SDL_Renderer* renderer);
 

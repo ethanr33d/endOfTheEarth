@@ -1,42 +1,42 @@
 #include "HelpScreen.h"
 
 void HelpScreen::backHandle() {
-	engine.popGameState(); // return to main menu
+	m_engine.popGameState(); // return to main menu
 }
 
-HelpScreen::HelpScreen(Engine& engine) : GameState(engine), backButton(Button("Back")),
-		title(TextNode("Help")), helpText(TextNode(HELP_TEXT)) {
-	title.setFontSize(64);
+HelpScreen::HelpScreen(Engine& engine) : GameState(engine), m_backButton(Button("Back")),
+		m_title(TextNode("Help")), m_helpText(TextNode(HELP_TEXT)) {
+	m_title.setFontSize(64);
 	
-	helpText.setWrapped(true);
-	helpText.setFontSize(24);
+	m_helpText.setWrapped(true);
+	m_helpText.setFontSize(24);
 
-	SDL_Rect titleBounds = title.getBounds();
-	SDL_Rect helpBounds = helpText.getBounds();
+	SDL_Rect titleBounds = m_title.getBounds();
+	SDL_Rect helpBounds = m_helpText.getBounds();
 
-	title.setPosition(500 - titleBounds.w / 2, 25); // center horizontally
-	helpText.setPosition(500 - helpBounds.w / 2, 50 + titleBounds.h); // center and place after title
+	m_title.setPosition(500 - titleBounds.w / 2, 25); // center horizontally
+	m_helpText.setPosition(500 - helpBounds.w / 2, 50 + titleBounds.h); // center and place after title
 
-	helpBounds = helpText.getBounds(); // get updated position
+	helpBounds = m_helpText.getBounds(); // get updated position
 
-	backButton.setSize(200, 75);
-	backButton.setPosition(400, helpBounds.y + helpBounds.h + 25); // position after help text
+	m_backButton.setSize(200, 75);
+	m_backButton.setPosition(400, helpBounds.y + helpBounds.h + 25); // position after help text
 
-	backButton.setMouseUpHandle(std::bind(&HelpScreen::backHandle, this));
+	m_backButton.setMouseUpHandle(std::bind(&HelpScreen::backHandle, this));
 
-	registerClickable(&backButton);
-	registerHoverable(&backButton);
+	registerClickable(&m_backButton);
+	registerHoverable(&m_backButton);
 
-	title.show();
-	helpText.show();
-	backButton.show();
+	m_title.show();
+	m_helpText.show();
+	m_backButton.show();
 }
 
 void HelpScreen::drawFrame() {
-	SDL_Renderer* renderer = engine.getRenderer();
+	SDL_Renderer* renderer = m_engine.getRenderer();
 
 	MainMenu::drawDefaultBackground(renderer);
-	title.draw(renderer);
-	helpText.draw(renderer);
-	backButton.draw(renderer);
+	m_title.draw(renderer);
+	m_helpText.draw(renderer);
+	m_backButton.draw(renderer);
 }

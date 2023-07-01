@@ -13,9 +13,9 @@ class HelpScreen : public GameState {
 			"this concludes the tutorial \n"
 			"go test something else now \n";
 
-		Button backButton;
-		TextNode title;
-		TextNode helpText;
+		Button m_backButton;
+		TextNode m_title;
+		TextNode m_helpText;
 
 		void backHandle();
 	public:

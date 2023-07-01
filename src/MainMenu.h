@@ -11,10 +11,10 @@ class MainMenu : public GameState {
 	private:
 		inline static const std::string TITLE_FONT = SDLUtils::getResourceDirPath("fonts") + "pixelFont.ttf";
 		inline static const std::string GAME_NAME = "End of the Earth";
-		Button playBtn;
-		Button helpBtn;
-		Button creditsBtn;
-		TextNode title;
+		Button m_playBtn;
+		Button m_helpBtn;
+		Button m_creditsBtn;
+		TextNode m_title;
 
 		void playHandle();
 		void helpHandle();

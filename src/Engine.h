@@ -32,16 +32,16 @@ class Engine {
 		/* private member variables */
 
 		// Engine member variables
-		std::set<IClickable*>* clickableElements; 
-		std::set<IHoverable*>* hoverableElements; // elements engine checks for events
+		std::set<IClickable*>* m_clickableElements; 
+		std::set<IHoverable*>* m_hoverableElements; // elements engine checks for events
 
-		std::stack<GameState*> gameStates;
-		SDL_Window* mainWindow;
-		SDL_Renderer* renderer;
+		std::stack<GameState*> m_gameStates;
+		SDL_Window* m_mainWindow;
+		SDL_Renderer* m_renderer;
 		
 		// Engine state variables
-		std::set<IHoverable*> currentlyHoveredElements; 
-		bool changingState; // used to invalidate event loop after state changes
+		std::set<IHoverable*> m_currentlyHoveredElements; 
+		bool m_changingState; // used to invalidate event loop after state changes
 
 		/* private member methods */
 
@@ -54,8 +54,8 @@ class Engine {
 		// where components are destroyed
 		~Engine();
 
-		Engine() : clickableElements{ nullptr }, hoverableElements{ nullptr }, 
-			mainWindow(nullptr), renderer(nullptr) {};
+		Engine() : m_clickableElements{ nullptr }, m_hoverableElements{ nullptr }, 
+			m_mainWindow{ nullptr }, m_renderer{ nullptr }, m_changingState{ false } {};
 		/* Init/Game loop functions */
 
 

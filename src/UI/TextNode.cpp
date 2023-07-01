@@ -2,74 +2,75 @@
 
 void TextNode::createTextTexture(SDL_Renderer* renderer) {
 	// open font if it isn't open
-	if (!font) {
+	if (!m_font) {
 		setFont(DEFAULT_FONT, DEFAULT_FONT_SIZE);
 	}
 
-	textTexture = SDLUtils::createTextTexture(renderer, font, nodeText.c_str(), fontColor, wrapped);
+	m_textTexture = SDLUtils::createTextTexture(
+		renderer, m_font, m_nodeText.c_str(), m_fontColor, m_wrapped);
 
-	SDL_SetTextureScaleMode(textTexture, SDL_ScaleModeBest); // for better text scaling
+	SDL_SetTextureScaleMode(m_textTexture, SDL_ScaleModeBest); // for better text scaling
 }
 
 TextNode::~TextNode() {
-	if (font) TTF_CloseFont(font);
-	if (textTexture) SDL_DestroyTexture(textTexture);
+	if (m_font) TTF_CloseFont(m_font);
+	if (m_textTexture) SDL_DestroyTexture(m_textTexture);
 }
 
 TextNode::TextNode(const std::string& text, const std::string& fontFile, const int fontSize) : 
-		nodeText{ text }, textTexture{ nullptr }, font{ nullptr },  fontSize{fontSize},
-		fontColor{ DEFAULT_FONT_COLOR }, wrapped{ false } {
+		m_nodeText{ text }, m_textTexture{ nullptr }, m_font{ nullptr },  m_fontSize{fontSize},
+		m_fontColor{ DEFAULT_FONT_COLOR }, m_wrapped{ false } {
 	// open font so text dimensions can be computed, only render texture when it needs to be drawn
 	setFont(fontFile, fontSize);
-	TTF_SizeText(font, nodeText.c_str(), &w, &h);
+	TTF_SizeText(m_font, m_nodeText.c_str(), &m_w, &m_h);
 }
 
 void TextNode::setFontColor(const SDL_Color& color) {
-	fontColor = color;
+	m_fontColor = color;
 }
 
 void TextNode::setFontSize(const int size) {
-	TTF_SetFontSize(font, size);
-	TTF_SizeText(font, nodeText.c_str(), &w, &h); // recompute dimensions
+	TTF_SetFontSize(m_font, size);
+	TTF_SizeText(m_font, m_nodeText.c_str(), &m_w, &m_h); // recompute dimensions
 }
 
 void TextNode::setText(const std::string& text) {
-	nodeText = text;
-	TTF_SizeText(font, text.c_str(), &w, &h); // recompute dimensions
+	m_nodeText = text;
+	TTF_SizeText(m_font, text.c_str(), &m_w, &m_h); // recompute dimensions
 
 	// destroy old texture
-	if (textTexture) {
-		SDL_DestroyTexture(textTexture);
+	if (m_textTexture) {
+		SDL_DestroyTexture(m_textTexture);
 	}
 
-	textTexture = nullptr;
+	m_textTexture = nullptr;
 }
 
 void TextNode::setFont(const std::string& file, int fontSize) {
-	if (font) {
-		TTF_CloseFont(font);
+	if (m_font) {
+		TTF_CloseFont(m_font);
 	}
 
-	font = TTF_OpenFont(file.c_str(), fontSize);
-	TTF_SizeText(font, nodeText.c_str(), &w, &h); // recompute dimensions
+	m_font = TTF_OpenFont(file.c_str(), fontSize);
+	TTF_SizeText(m_font, m_nodeText.c_str(), &m_w, &m_h); // recompute dimensions
 
-	if (!font) {
+	if (!m_font) {
 		SDLUtils::error("TextNode::setFont OpenFont");
 	}
 }
 
 void TextNode::setWrapped(const bool wrap) {
-	wrapped = wrap;
+	m_wrapped = wrap;
 }
 
 void TextNode::draw(SDL_Renderer* renderer) {
-	if (!shown) return;
-	SDL_Rect textRect{ x, y, w, h };
+	if (!m_shown) return;
+	SDL_Rect textRect{ m_x, m_y, m_w, m_h };
 
 	// draw texture if it isn't already drawn
-	if (!textTexture) {
+	if (!m_textTexture) {
 		createTextTexture(renderer);
 	}
 
-	SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+	SDL_RenderCopy(renderer, m_textTexture, NULL, &textRect);
 }

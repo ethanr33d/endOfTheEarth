@@ -1,66 +1,66 @@
 #include "Button.h"
 
 void Button::setMouseDownHandle(const std::function<void()>& func) {
-	downHandler = func;
+	m_downHandler = func;
 }
 
 void Button::setMouseUpHandle(const std::function<void()>& func) {
-	upHandler = func;
+	m_upHandler = func;
 }
 
 void Button::setHoverStartHandle(const std::function<void()>& func) {
-	hoverStartHandler = func;
+	m_hoverStartHandler = func;
 }
 
 void Button::setHoverEndHandle(const std::function<void()>& func) {
-	hoverEndHandler = func;
+	m_hoverEndHandler = func;
 }
 
 void Button::mouseDown() {
-	clicking = true;
+	m_clicking = true;
 
-	if (downHandler) downHandler();
+	if (m_downHandler) m_downHandler();
 }
 
 void Button::mouseUp() {
-	clicking = false;
+	m_clicking = false;
 
-	if (upHandler) upHandler();
+	if (m_upHandler) m_upHandler();
 }
 
 void Button::mouseEnter() {
-	hover = true;
+	m_hover = true;
 
-	if (hoverStartHandler) hoverStartHandler();
+	if (m_hoverStartHandler) m_hoverStartHandler();
 }
 
 void Button::mouseLeave() {
-	hover = false;
-	clicking = false;
+	m_hover = false;
+	m_clicking = false;
 
-	if (hoverEndHandler) hoverEndHandler();
+	if (m_hoverEndHandler) m_hoverEndHandler();
 }
 
 SDL_Rect Button::getClickBox() {
-	return SDL_Rect{ x,y,w,h };
+	return SDL_Rect{ m_x, m_y, m_w, m_h };
 }
 
 SDL_Rect Button::getHoverBox() {
-	return SDL_Rect{ x,y,w,h };
+	return SDL_Rect{ m_x, m_y, m_w, m_h };
 }
 
 void Button::draw(SDL_Renderer* renderer) {
-	if (!shown) return;
+	if (!m_shown) return;
 
 	// set correct background color
-	if (clicking) {
-		bgColor = clickColor;
+	if (m_clicking) {
+		m_bgColor = m_clickColor;
 	}
-	else if (hover) {
-		bgColor = hoverColor;
+	else if (m_hover) {
+		m_bgColor = m_hoverColor;
 	}
 	else {
-		bgColor = idleColor;
+		m_bgColor = m_idleColor;
 	}
 
 	// button is a text label

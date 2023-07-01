@@ -13,12 +13,12 @@ class TextNode : public Drawable {
 		inline static const SDL_Color DEFAULT_FONT_COLOR {0, 0, 0, 255};
 		inline static const int DEFAULT_FONT_SIZE = 60; // text is scaled from here to fit button width
 
-		std::string nodeText;
-		SDL_Texture* textTexture;
-		TTF_Font* font;
-		int fontSize;
-		SDL_Color fontColor;
-		bool wrapped;
+		std::string m_nodeText;
+		SDL_Texture* m_textTexture;
+		TTF_Font* m_font;
+		int m_fontSize;
+		SDL_Color m_fontColor;
+		bool m_wrapped;
 		void createTextTexture(SDL_Renderer* renderer); // helper function for generating texture
 	public:
 		~TextNode();
@@ -30,5 +30,6 @@ class TextNode : public Drawable {
 		void setText(const std::string& text);
 		void setFont(const std::string& font, int fontSize);
 		void setWrapped(const bool wrap);
+
 		virtual void draw(SDL_Renderer* renderer);
 };
