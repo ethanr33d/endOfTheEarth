@@ -4,8 +4,12 @@ void HelpScreen::backHandle() {
 	m_engine.popGameState(); // return to main menu
 }
 
-HelpScreen::HelpScreen(Engine& engine) : GameState(engine), m_backButton(Button("Back")),
-		m_title(TextNode("Help")), m_helpText(TextNode(HELP_TEXT)) {
+HelpScreen::HelpScreen(Engine& engine) 
+	: GameState(engine), 
+	m_backButton(Button(engine.getRenderer(), "Back")),
+	m_title(TextNode(engine.getRenderer(), "Help")),
+	m_helpText(TextNode(engine.getRenderer(), HELP_TEXT)) {
+
 	m_title.setFontSize(64);
 	
 	m_helpText.setWrapped(true);
@@ -36,7 +40,7 @@ void HelpScreen::drawFrame() {
 	SDL_Renderer* renderer = m_engine.getRenderer();
 
 	MainMenu::drawDefaultBackground(renderer);
-	m_title.draw(renderer);
-	m_helpText.draw(renderer);
-	m_backButton.draw(renderer);
+	m_title.draw();
+	m_helpText.draw();
+	m_backButton.draw();
 }

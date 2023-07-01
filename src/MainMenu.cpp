@@ -12,8 +12,12 @@ void MainMenu::creditsHandle() {
 	std::cout << "credits pressed" << std::endl;
 }
 
-MainMenu::MainMenu(Engine& engine) : GameState(engine), m_playBtn(Button("Play")),
-	m_helpBtn(Button("Help")), m_creditsBtn(Button("Credits")), m_title(TextNode(GAME_NAME)) {
+MainMenu::MainMenu(Engine& engine) 
+	: GameState(engine), 
+	m_playBtn(Button(engine.getRenderer(), "Play")),
+	m_helpBtn(Button(engine.getRenderer(), "Help")),
+	m_creditsBtn(Button(engine.getRenderer(), "Credits")),
+	m_title(TextNode(engine.getRenderer(), GAME_NAME)) {
 	// draw title
 	m_title.setFont(TITLE_FONT, 64);
 	SDL_Rect titleBounds = m_title.getBounds();
@@ -52,12 +56,12 @@ void MainMenu::drawFrame() {
 	drawDefaultBackground(renderer);
 
 	// draw title
-	m_title.draw(renderer);
+	m_title.draw();
 
 	// draw buttons
-	m_playBtn.draw(m_engine.getRenderer());
-	m_helpBtn.draw(m_engine.getRenderer());
-	m_creditsBtn.draw(m_engine.getRenderer());
+	m_playBtn.draw();
+	m_helpBtn.draw();
+	m_creditsBtn.draw();
 }
 
 void MainMenu::drawDefaultBackground(SDL_Renderer* renderer) {
