@@ -2,7 +2,8 @@
 #include "GameState.h"
 #include "MainMenu.h"
 #include "HelpScreen.h"
-
+#include "CreditsScreen.h"
+#include "GameLoading.h"
 // private member methods
 void Engine::reportFinishedFrame(int time) {
 	if (m_frameFinishTimes.size() >= FPS_N_AVERAGE) {
@@ -30,6 +31,27 @@ void Engine::renderFPS() {
 	}
 
 	m_fpsCounter->draw();
+}
+
+void Engine::transitionGameState(GameState* state) {
+	// set tracked elements to new state
+	m_clickableElements = state->getClickableElements();
+	m_hoverableElements = state->getHoverableElements();
+	m_currentlyHoveredElements = state->getCurrentlyHoveredElements();
+
+	// reset mouse state since mouse state might have changed between states
+	// e.x: mouse may no longer be hovering over an element it was hovering over
+	// prior to a state change
+	SDL_Event mouseResetEvent{};
+
+	int mouseX{ 0 }, mouseY{ 0 };
+	SDL_GetMouseState(&mouseX, &mouseY);
+
+	mouseResetEvent.type = SDL_MOUSEMOTION;
+	mouseResetEvent.motion.x = mouseX;
+	mouseResetEvent.motion.y = mouseY;
+
+	SDL_PushEvent(&mouseResetEvent);
 }
 
 // public methods
@@ -108,14 +130,18 @@ void Engine::pushGameState(GAME_STATE state) {
 		case HELP_SCREEN:
 			newState = new HelpScreen(*this);
 			break;
+		case CREDITS_SCREEN:
+			newState = new CreditsScreen(*this);
+			break;
+		case GAME_LOADING:
+			newState = new GameLoading(*this);
+			break;
 	}
 
 	m_gameStates.push(newState);
 	m_changingState = true;
 
-	// set tracked elements to new state
-	m_clickableElements = newState->getClickableElements();
-	m_hoverableElements = newState->getHoverableElements();
+	transitionGameState(newState);
 }
 
 void Engine::popGameState() {
@@ -127,10 +153,7 @@ void Engine::popGameState() {
 	m_changingState = true;
 	delete deadState; // release memory
 
-	// reset tracked elements to old state
-	m_clickableElements = m_gameStates.top()->getClickableElements();
-	m_hoverableElements = m_gameStates.top()->getHoverableElements();
-
+	transitionGameState(m_gameStates.top());
 }
 
 bool Engine::handleEvents() {
@@ -152,7 +175,7 @@ bool Engine::handleEvents() {
 					if (event.type == SDL_MOUSEBUTTONDOWN) element->mouseDown();
 					if (event.type == SDL_MOUSEBUTTONUP) element->mouseUp();
 					
-					if (m_changingState) return false; // button press resulted in state change; abort
+					if (m_changingState) break; // button press resulted in state change; abort
 				}
 			}
 			break;
@@ -167,14 +190,14 @@ bool Engine::handleEvents() {
 					bool mouseEntered = true;
 
 					// check if mouse already hovering over element
-					if (m_currentlyHoveredElements.find(element) != m_currentlyHoveredElements.end()) {
+					if (m_currentlyHoveredElements->find(element) != m_currentlyHoveredElements->end()) {
 						mouseEntered = false; // mouseEntered event has already fired	
 					}
 					
 					if (mouseEntered) { // if mouseEntered has not already fired
-						m_currentlyHoveredElements.insert(element);
+						m_currentlyHoveredElements->insert(element);
 						element->mouseEnter();
-						if (m_changingState) return false; // button call changed state; abort
+						if (m_changingState) break; // button call changed state; abort
 					}
 					
 				}
@@ -182,15 +205,15 @@ bool Engine::handleEvents() {
 					bool mouseLeft = false;
 
 					// check to see if we are tracking element for a leave event
-					if (m_currentlyHoveredElements.find(element) != m_currentlyHoveredElements.end()) {
+					if (m_currentlyHoveredElements->find(element) != m_currentlyHoveredElements->end()) {
 						mouseLeft = true;
 					}
 
 					if (mouseLeft) {
-						m_currentlyHoveredElements.erase(element);
+						m_currentlyHoveredElements->erase(element);
 						element->mouseLeave();
 
-						if (m_changingState) return false; // button call changed state; abort
+						if (m_changingState) break; // button call changed state; abort
 					}
 				}
 			}

@@ -14,7 +14,7 @@
 class GameState; // forward declaration for circular dependency
 class TextNode;
 
-enum GAME_STATE{MAIN_MENU, HELP_SCREEN};
+enum GAME_STATE{MAIN_MENU, HELP_SCREEN, CREDITS_SCREEN, GAME_LOADING};
 
 class Engine {
 	private:
@@ -42,18 +42,20 @@ class Engine {
 		// Engine member variables
 		std::set<IClickable*>* m_clickableElements; 
 		std::set<IHoverable*>* m_hoverableElements; // elements engine checks for events
+		std::set<IHoverable*>* m_currentlyHoveredElements;
 
 		std::stack<GameState*> m_gameStates;
 		SDL_Window* m_mainWindow;
 		SDL_Renderer* m_renderer;
 		
 		// Engine state variables
-		std::set<IHoverable*> m_currentlyHoveredElements; 
 		bool m_changingState; // used to invalidate event loop after state changes
 
 		/* private member methods */
-		void reportFinishedFrame(int time);
+		void reportFinishedFrame(int time); 
 		void renderFPS();
+
+		void transitionGameState(GameState* state); // internal transition cleanup
 
 		// returns whether the given x,y is contained within the target rectangle.
 		// the edge is included
@@ -63,8 +65,8 @@ class Engine {
 		// where components are destroyed
 		~Engine();
 
-		Engine() : m_fpsCounter{ nullptr }, m_clickableElements { nullptr }, m_hoverableElements{ nullptr },
-			m_mainWindow{ nullptr }, m_renderer{ nullptr }, m_changingState{ false } {};
+		Engine() : m_fpsCounter{ nullptr }, m_mainWindow{ nullptr }, m_renderer{ nullptr }, 
+			m_changingState{ false } {};
 		/* Init/Game loop functions */
 
 
