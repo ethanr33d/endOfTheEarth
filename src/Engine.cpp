@@ -4,7 +4,35 @@
 #include "HelpScreen.h"
 
 // private member methods
+void Engine::reportFinishedFrame(int time) {
+	if (m_frameFinishTimes.size() >= FPS_N_AVERAGE) {
+		m_frameFinishTimes.pop();
+	}
 
+	m_frameFinishTimes.push(time);
+}
+
+void Engine::renderFPS() {
+	if (m_frameFinishTimes.empty()) {
+		m_fpsCounter->draw(); // no frames to calculate yet
+		return;
+	}
+
+	// current time - first completion time in batch
+	int totFrameTime = SDL_GetTicks() - m_frameFinishTimes.front();
+
+	if (totFrameTime > 0) {
+		double fps = m_frameFinishTimes.size() / (static_cast<double>(totFrameTime) / 1000); // convert ms to s
+		m_fpsCounter->setText("FPS: " +  std::to_string(fps));
+	}
+	else {
+		m_fpsCounter->setText("FPS: inf");
+	}
+
+	m_fpsCounter->draw();
+}
+
+// public methods
 Engine::~Engine() {
 	// clean state memory
 	while (!m_gameStates.empty()) {
@@ -13,6 +41,8 @@ Engine::~Engine() {
 
 		delete stateToRemove;
 	}
+
+	delete m_fpsCounter;
 
 	// close libraries
 	if (m_mainWindow) SDL_DestroyWindow(m_mainWindow);
@@ -64,6 +94,8 @@ bool Engine::initializeComponents(const std::string& appName) {
 		return false;
 	}
 
+	m_fpsCounter = new TextNode(m_renderer, "FPS:", 16); // initialize fpsCounter
+	m_fpsCounter->show();
 	return true;
 }
 
@@ -170,8 +202,11 @@ bool Engine::handleEvents() {
 
 void Engine::renderFrame() {
 	m_gameStates.top()->drawFrame();
+	renderFPS();
+
 	SDL_RenderPresent(m_renderer);
 	SDL_RenderClear(m_renderer);
+	reportFinishedFrame(SDL_GetTicks());
 }
 
 void Engine::cleanup() {

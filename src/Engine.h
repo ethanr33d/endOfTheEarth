@@ -4,6 +4,7 @@
 #include <string>
 #include <set>
 #include <stack>
+#include <queue>
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_ttf.h"
 #include "SDLUtils.h"
@@ -11,6 +12,7 @@
 #include "UI/IHoverable.h"
 
 class GameState; // forward declaration for circular dependency
+class TextNode;
 
 enum GAME_STATE{MAIN_MENU, HELP_SCREEN};
 
@@ -27,10 +29,16 @@ class Engine {
 		inline static const int WINDOW_FLAGS = SDL_WINDOW_SHOWN;
 
 		// Renderer constants
-		const int RENDERER_FLAGS = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
+		inline static const int RENDERER_FLAGS = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
+
+		// Engine constants
+		inline static const int FPS_N_AVERAGE = 250; // average fps calculated over this many frames
 
 		/* private member variables */
-
+		//Engine Stats
+		TextNode* m_fpsCounter; // initialized in initializeComponents
+		std::queue<int> m_frameFinishTimes; // queue of the finish time of recent fps_n_avg frames
+		
 		// Engine member variables
 		std::set<IClickable*>* m_clickableElements; 
 		std::set<IHoverable*>* m_hoverableElements; // elements engine checks for events
@@ -44,7 +52,8 @@ class Engine {
 		bool m_changingState; // used to invalidate event loop after state changes
 
 		/* private member methods */
-
+		void reportFinishedFrame(int time);
+		void renderFPS();
 
 		// returns whether the given x,y is contained within the target rectangle.
 		// the edge is included
@@ -54,7 +63,7 @@ class Engine {
 		// where components are destroyed
 		~Engine();
 
-		Engine() : m_clickableElements{ nullptr }, m_hoverableElements{ nullptr }, 
+		Engine() : m_fpsCounter{ nullptr }, m_clickableElements { nullptr }, m_hoverableElements{ nullptr },
 			m_mainWindow{ nullptr }, m_renderer{ nullptr }, m_changingState{ false } {};
 		/* Init/Game loop functions */
 
