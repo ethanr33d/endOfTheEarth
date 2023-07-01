@@ -1,7 +1,7 @@
 #include "MainMenu.h"
 
 void MainMenu::playHandle() {
-	std::cout << "play pressed: " << std::endl;
+	m_engine.pushGameState(GAME_LOADING);
 }
 
 void MainMenu::helpHandle() {
@@ -9,7 +9,7 @@ void MainMenu::helpHandle() {
 }
 
 void MainMenu::creditsHandle() {
-	std::cout << "credits pressed" << std::endl;
+	m_engine.pushGameState(CREDITS_SCREEN);
 }
 
 MainMenu::MainMenu(Engine& engine) 
