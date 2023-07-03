@@ -27,6 +27,7 @@
     <ClInclude Include="src\GameState.h" />
     <ClInclude Include="src\game\Player.h" />
     <ClInclude Include="src\HelpScreen.h" />
+    <ClInclude Include="src\IKeyboardListener.h" />
     <ClInclude Include="src\MainMenu.h" />
     <ClInclude Include="src\SDLUtils.h" />
     <ClInclude Include="src\UI\Button.h" />
