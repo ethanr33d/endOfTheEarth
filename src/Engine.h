@@ -10,6 +10,7 @@
 #include "SDLUtils.h"
 #include "UI/IClickable.h"
 #include "UI/IHoverable.h"
+#include "IKeyboardListener.h"
 
 class GameState; // forward declaration for circular dependency
 class TextNode;
@@ -40,8 +41,9 @@ class Engine {
 		std::queue<int> m_frameFinishTimes; // queue of the finish time of recent fps_n_avg frames
 		
 		// Engine member variables
-		std::set<IClickable*>* m_clickableElements; 
-		std::set<IHoverable*>* m_hoverableElements; // elements engine checks for events
+		std::set<IClickable*>* m_clickableElements; // elements engine checks for events
+		std::set<IHoverable*>* m_hoverableElements; 
+		std::set<IKeyboardListener*>* m_keyboardListeners;
 		std::set<IHoverable*>* m_currentlyHoveredElements;
 
 		std::stack<GameState*> m_gameStates;
@@ -50,6 +52,7 @@ class Engine {
 		
 		// Engine state variables
 		bool m_changingState; // used to invalidate event loop after state changes
+		std::set<SDL_Keycode> m_keysDown;
 
 		/* private member methods */
 		void reportFinishedFrame(int time); 
@@ -65,8 +68,9 @@ class Engine {
 		// where components are destroyed
 		~Engine();
 
-		Engine() : m_fpsCounter{ nullptr }, m_mainWindow{ nullptr }, m_renderer{ nullptr }, 
-			m_changingState{ false } {};
+		Engine() : m_fpsCounter{ nullptr }, m_clickableElements{ nullptr }, m_hoverableElements{ nullptr },
+			m_keyboardListeners{ nullptr }, m_currentlyHoveredElements{ nullptr },
+			m_mainWindow { nullptr }, m_renderer{ nullptr }, m_changingState{ false } {};
 		/* Init/Game loop functions */
 
 

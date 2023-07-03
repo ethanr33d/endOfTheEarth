@@ -37,6 +37,7 @@ void Engine::transitionGameState(GameState* state) {
 	// set tracked elements to new state
 	m_clickableElements = state->getClickableElements();
 	m_hoverableElements = state->getHoverableElements();
+	m_keyboardListeners = state->getKeyboardListeners();
 	m_currentlyHoveredElements = state->getCurrentlyHoveredElements();
 
 	// reset mouse state since mouse state might have changed between states
@@ -162,60 +163,96 @@ bool Engine::handleEvents() {
 
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
-		case SDL_QUIT:
-			return true;
-			break;
-		case SDL_MOUSEBUTTONDOWN:
-		case SDL_MOUSEBUTTONUP:
-			for (IClickable* element : *m_clickableElements) {
-				SDL_Rect elementBox = element->getClickBox();
-				bool contained = pointContainedInBox(elementBox, event.button.x, event.button.y);
-
-				if (contained) {
-					if (event.type == SDL_MOUSEBUTTONDOWN) element->mouseDown();
-					if (event.type == SDL_MOUSEBUTTONUP) element->mouseUp();
-					
-					if (m_changingState) break; // button press resulted in state change; abort
-				}
+			case SDL_QUIT:
+			{
+				return true;
+				break;
 			}
-			break;
-		case SDL_MOUSEMOTION:
+			case SDL_MOUSEBUTTONDOWN:
+			case SDL_MOUSEBUTTONUP:
+			{
+				for (IClickable* element : *m_clickableElements) {
+					SDL_Rect elementBox = element->getClickBox();
+					bool contained = pointContainedInBox(elementBox, event.button.x, event.button.y);
 
-			// hover events (pseudo mouseEnter & mouseLeave events)
-			for (IHoverable* element : *m_hoverableElements) {
-				SDL_Rect elementBox = element->getHoverBox();
-				bool contained = pointContainedInBox(elementBox, event.motion.x, event.motion.y);
+					if (contained) {
+						if (event.type == SDL_MOUSEBUTTONDOWN) element->mouseDown();
+						if (event.type == SDL_MOUSEBUTTONUP) element->mouseUp();
 
-				if (contained) { // check if we need to fire mouseEnter
-					bool mouseEntered = true;
-
-					// check if mouse already hovering over element
-					if (m_currentlyHoveredElements->find(element) != m_currentlyHoveredElements->end()) {
-						mouseEntered = false; // mouseEntered event has already fired	
-					}
-					
-					if (mouseEntered) { // if mouseEntered has not already fired
-						m_currentlyHoveredElements->insert(element);
-						element->mouseEnter();
-						if (m_changingState) break; // button call changed state; abort
-					}
-					
-				}
-				else { // check if we need to fire mouseLeave
-					bool mouseLeft = false;
-
-					// check to see if we are tracking element for a leave event
-					if (m_currentlyHoveredElements->find(element) != m_currentlyHoveredElements->end()) {
-						mouseLeft = true;
-					}
-
-					if (mouseLeft) {
-						m_currentlyHoveredElements->erase(element);
-						element->mouseLeave();
-
-						if (m_changingState) break; // button call changed state; abort
+						if (m_changingState) break; // button press resulted in state change; abort
 					}
 				}
+				break;
+			}
+			case SDL_MOUSEMOTION:
+			{
+				// hover events (pseudo mouseEnter & mouseLeave events)
+				for (IHoverable* element : *m_hoverableElements) {
+					SDL_Rect elementBox = element->getHoverBox();
+					bool contained = pointContainedInBox(elementBox, event.motion.x, event.motion.y);
+
+					if (contained) { // check if we need to fire mouseEnter
+						bool mouseEntered = true;
+
+						// check if mouse already hovering over element
+						if (m_currentlyHoveredElements->find(element) != m_currentlyHoveredElements->end()) {
+							mouseEntered = false; // mouseEntered event has already fired	
+						}
+					
+						if (mouseEntered) { // if mouseEntered has not already fired
+							m_currentlyHoveredElements->insert(element);
+							element->mouseEnter();
+							if (m_changingState) break; // button call changed state; abort
+						}
+					
+					}
+					else { // check if we need to fire mouseLeave
+						bool mouseLeft = false;
+
+						// check to see if we are tracking element for a leave event
+						if (m_currentlyHoveredElements->find(element) != m_currentlyHoveredElements->end()) {
+							mouseLeft = true;
+						}
+
+						if (mouseLeft) {
+							m_currentlyHoveredElements->erase(element);
+							element->mouseLeave();
+
+							if (m_changingState) break; // button call changed state; abort
+						}
+					}
+				}
+				break;
+			}
+			case SDL_KEYDOWN:
+			{
+				// event may fire more than once by OS when key is held down
+				// this loop prevents more than one keyDown event from firing on an element
+				bool abortEvent = false;
+				for (SDL_Keycode key : m_keysDown) {
+					if (event.key.keysym.sym == key) {
+						abortEvent = true; // key already marked down
+						break;
+					}
+				}
+				if (abortEvent) break;
+				[[fallthrough]];
+			}
+			case SDL_KEYUP:
+			{
+				// forward key event to element for processing
+				for (IKeyboardListener* element : *m_keyboardListeners) {
+					if (event.type == SDL_KEYDOWN) {
+						element->keyDown(event.key.keysym.sym);
+						m_keysDown.insert(event.key.keysym.sym);
+					}
+					else {
+						element->keyUp(event.key.keysym.sym);
+						m_keysDown.erase(event.key.keysym.sym);
+					}
+
+				}
+				break;
 			}
 		}
 	}
