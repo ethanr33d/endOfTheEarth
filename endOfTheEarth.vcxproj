@@ -25,6 +25,7 @@
     <ClInclude Include="src\GameData.h" />
     <ClInclude Include="src\GameLoading.h" />
     <ClInclude Include="src\GameState.h" />
+    <ClInclude Include="src\game\PhysicsEngine.h" />
     <ClInclude Include="src\game\Player.h" />
     <ClInclude Include="src\HelpScreen.h" />
     <ClInclude Include="src\IKeyboardListener.h" />
@@ -42,6 +43,7 @@
     <ClCompile Include="src\Engine.cpp" />
     <ClCompile Include="src\GameLoading.cpp" />
     <ClCompile Include="src\GameState.cpp" />
+    <ClCompile Include="src\game\PhysicsEngine.cpp" />
     <ClCompile Include="src\game\Player.cpp" />
     <ClCompile Include="src\HelpScreen.cpp" />
     <ClCompile Include="src\main.cpp" />

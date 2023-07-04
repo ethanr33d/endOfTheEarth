@@ -72,6 +72,9 @@
     <ClInclude Include="src\IKeyboardListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\game\PhysicsEngine.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Engine.cpp">
@@ -111,7 +114,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\game\Player.cpp">
-      <Filter>Header Files\game</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\PhysicsEngine.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
