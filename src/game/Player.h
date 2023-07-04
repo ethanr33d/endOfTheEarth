@@ -27,7 +27,6 @@ class Player : public Drawable, public IKeyboardListener {
 
 		double m_exactXPos; // exact position for physics calculations
 		double m_exactYPos;
-		int clock;
 
 		// when key event comes in, update matrix as appropriate
 		void adjustMovementMatrix(SDL_Keycode key, bool moveInDirection, int time = 0);

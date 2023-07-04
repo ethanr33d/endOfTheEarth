@@ -1,5 +1,5 @@
 #include "Player.h"
-#include <iostream>
+
 void Player::adjustMovementMatrix(SDL_Keycode key, bool moveInDirection, int time) {
 	switch (key) {
 		case MOVE_UP_KEY:
