@@ -5,13 +5,15 @@
 
 class PhysicsEngine {
 	private:
-	std::vector<Drawable*> collidableElements;
+	std::vector<Drawable*> m_collidableElements;
 
-	std::vector<SDL_Rect> getXAxisCollisions(const SDL_Rect& queryRect);
+	std::vector<SDL_Rect> getCollisions(const SDL_Rect& queryRect, const Drawable* ignoreElement = nullptr);
 
 	public:
 		// return the nearest valid coordinates to desiredBounds such that there are no collisions 
 		// between any objects. 
 		// NOTE: Assumes that currentBounds are valid. 
-		SDL_Rect getNearestValidCoords(const SDL_Rect& currentBounds, const int destX, const int destY);
+		SDL_Rect getNearestValidCoords(const Drawable* element, const int destX, const int destY);
+		void addCollidableElement(Drawable* element);
 };
+
