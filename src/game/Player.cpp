@@ -44,7 +44,15 @@ void Player::draw() {
 	if (m_movementMatrix.moveUp) m_movementMatrix.upKeyTime = time;
 	if (m_movementMatrix.moveDown) m_movementMatrix.downKeyTime = time;
 
-	setPosition(static_cast<int>(m_exactXPos), static_cast<int>(m_exactYPos));
+	double xFrac = m_exactXPos - (int)m_exactXPos;
+	double yFrac = m_exactYPos - (int)m_exactYPos;
+
+	//setPosition(static_cast<int>(m_exactXPos), static_cast<int>(m_exactYPos));
+	SDL_Rect physicsCheck = m_physicsEngine.getNearestValidCoords(this, (int)m_exactXPos, (int)m_exactYPos);
+	setPosition(physicsCheck.x, physicsCheck.y);
+	m_exactXPos = m_bounds.x + xFrac;
+	m_exactYPos = m_bounds.y + yFrac;
+
 	SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 255);
 	SDL_RenderFillRect(m_renderer, &m_bounds);
 	SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
