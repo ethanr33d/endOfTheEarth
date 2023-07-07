@@ -262,8 +262,7 @@ bool Engine::handleEvents() {
 
 void Engine::renderFrame() {
 	m_gameStates.top()->drawFrame();
-	renderFPS();
-
+	renderFPS(); // draw FPS counter
 	SDL_RenderPresent(m_renderer);
 	SDL_RenderClear(m_renderer);
 	reportFinishedFrame(SDL_GetTicks());
@@ -277,4 +276,8 @@ void Engine::cleanup() {
 
 SDL_Renderer* Engine::getRenderer() {
 	return m_renderer;
+}
+
+PhysicsEngine& Engine::getPhysicsEngine() {
+	return m_physicsEngine;
 }

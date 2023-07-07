@@ -11,6 +11,7 @@
 #include "UI/IClickable.h"
 #include "UI/IHoverable.h"
 #include "IKeyboardListener.h"
+#include "game/PhysicsEngine.h"
 
 class GameState; // forward declaration for circular dependency
 class TextNode;
@@ -33,7 +34,7 @@ class Engine {
 		inline static const int RENDERER_FLAGS = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 
 		// Engine constants
-		inline static const int FPS_N_AVERAGE = 250; // average fps calculated over this many frames
+		inline static const int FPS_N_AVERAGE = 100; // average fps calculated over this many frames
 
 		/* private member variables */
 		//Engine Stats
@@ -49,6 +50,7 @@ class Engine {
 		std::stack<GameState*> m_gameStates;
 		SDL_Window* m_mainWindow;
 		SDL_Renderer* m_renderer;
+		PhysicsEngine m_physicsEngine;
 		
 		// Engine state variables
 		bool m_changingState; // used to invalidate event loop after state changes
@@ -102,4 +104,5 @@ class Engine {
 
 		// get the engine's renderer
 		SDL_Renderer* getRenderer();
+		PhysicsEngine& getPhysicsEngine();
 };
