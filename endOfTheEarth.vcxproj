@@ -22,9 +22,9 @@
     <ClInclude Include="src\CreditsScreen.h" />
     <ClInclude Include="src\Drawable.h" />
     <ClInclude Include="src\Engine.h" />
-    <ClInclude Include="src\GameData.h" />
     <ClInclude Include="src\GameLoading.h" />
     <ClInclude Include="src\GameState.h" />
+    <ClInclude Include="src\game\GameData.h" />
     <ClInclude Include="src\game\PhysicsEngine.h" />
     <ClInclude Include="src\game\Player.h" />
     <ClInclude Include="src\HelpScreen.h" />
