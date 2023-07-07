@@ -66,13 +66,13 @@
     <ClInclude Include="src\game\Player.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\IKeyboardListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\game\PhysicsEngine.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameData.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
   </ItemGroup>

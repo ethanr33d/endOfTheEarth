@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GameState.h"
-#include "GameData.h"
+#include "game/GameData.h"
 
 class GameLoading : public GameState {
 	private:
