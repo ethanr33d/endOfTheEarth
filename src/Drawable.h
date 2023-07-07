@@ -23,5 +23,5 @@ class Drawable {
 		virtual void setPosition(const int newX, const int newY) { m_bounds.x = newX; m_bounds.y = newY; };
 		virtual void setSize(const int newW, const int newH) { m_bounds.w = newW, m_bounds.h = newH; };
 
-		SDL_Rect getBounds() { return m_bounds; };
+		SDL_Rect getBounds() const { return m_bounds; };
 };
