@@ -13,7 +13,7 @@ Runner game. Work in progress.
 1. Install Visual Studio 2022 ([Visual Studio homepage](https://visualstudio.microsoft.com/)).
 
    - Make sure the Desktop Development with C++ workload is selected during installation
-3. Install Git (([Git homepage](https://visualstudio.microsoft.com/))
+3. Install Git ([Git homepage](https://visualstudio.microsoft.com/))
 4. Install Vcpkg ([Vcpkg homepage](https://vcpkg.io/en/))
 5. Install packages
 
