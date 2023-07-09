@@ -20,6 +20,15 @@ void Player::adjustMovementMatrix(SDL_Keycode key, bool moveInDirection, int tim
 			break;
 	}
 }
+
+void Player::setPosition(const int newX, const int newY) {
+	Drawable::setPosition(newX, newY); // set usual bounds
+
+	m_exactXPos = static_cast<double>(newX);
+	m_exactYPos = static_cast<double>(newY); // set exact bounds
+
+}
+
 void Player::keyDown(SDL_Keycode key) {
 	adjustMovementMatrix(key, true, SDL_GetTicks()); // move if key is down
 }

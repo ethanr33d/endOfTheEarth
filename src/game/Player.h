@@ -37,6 +37,7 @@ class Player : public Drawable, public IKeyboardListener {
 		Player(SDL_Renderer* renderer, PhysicsEngine& physicsEngine) : Drawable(renderer),
 			m_physicsEngine(physicsEngine), m_exactXPos(0.0), m_exactYPos(0.0) {};
 
+		virtual void setPosition(const int newX, const int newY) override;
 		virtual void keyDown(SDL_Keycode key);
 		virtual void keyUp(SDL_Keycode key);
 		virtual void draw();
