@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TextNode">
+    <Position X="3" Y="4.5" Width="3" />
+    <Members>
+      <Method Name="~TextNode" Hidden="true" />
+      <Method Name="createTextTexture" Hidden="true" />
+      <Field Name="DEFAULT_FONT" Hidden="true" />
+      <Field Name="DEFAULT_FONT_COLOR" Hidden="true" />
+      <Field Name="DEFAULT_FONT_SIZE" Hidden="true" />
+      <Field Name="DEFAULT_WRAP_ALIGN" Hidden="true" />
+      <Field Name="FONT_RES_PATH" Hidden="true" />
+      <Field Name="m_customBoundsSet" Hidden="true" />
+      <Field Name="m_textBounds" Hidden="true" />
+      <Field Name="m_textTexture" Hidden="true" />
+      <Method Name="TextNode" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAACAAEAIEEAAAgBAAMCABCABgAAgAAAAEADCAICQAA=</HashCode>
+      <FileName>src\UI\TextNode.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Drawable">
+    <Position X="5.75" Y="0.75" Width="2.5" />
+    <Members>
+      <Method Name="Drawable" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAgAAAIAABACAAAAAgAAhAACAQAAAAA=</HashCode>
+      <FileName>src\Drawable.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TextLabel">
+    <Position X="7" Y="8" Width="1.5" />
+    <Members>
+      <Field Name="TEXT_PADDING" Hidden="true" />
+      <Method Name="TextLabel" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAgAAAQAAAAAAgAAAYAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\UI\TextLabel.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UIFrame">
+    <Position X="7" Y="4.5" Width="1.5" />
+    <Members>
+      <Field Name="DEFAULT_BG_COLOR" Hidden="true" />
+      <Field Name="DEFAULT_BORDER_COLOR" Hidden="true" />
+      <Field Name="DEFAULT_BORDER_SIZE" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AIAgAAAAAAAACAAAAAIAAAAAAAAAAAoAAQMAAAAAAAg=</HashCode>
+      <FileName>src\UI\UIFrame.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Button">
+    <Position X="6.75" Y="10.75" Width="2" />
+    <Members>
+      <Method Name="Button" Hidden="true" />
+      <Field Name="DEFAULT_BG_COLOR" Hidden="true" />
+      <Field Name="DEFAULT_CLICK_COLOR" Hidden="true" />
+      <Field Name="DEFAULT_HOVER_COLOR" Hidden="true" />
+      <Field Name="m_clicking" Hidden="true" />
+      <Field Name="m_hover" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>hMAgQAACQAABBAABAoIAACIQAAAAQAAAgAAIAIBAAAI=</HashCode>
+      <FileName>src\UI\Button.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Player">
+    <Position X="9.5" Y="4.5" Width="1.5" />
+    <Members>
+      <Method Name="adjustMovementMatrix" Hidden="true" />
+      <Field Name="MOVE_DOWN_KEY" Hidden="true" />
+      <Field Name="MOVE_LEFT_KEY" Hidden="true" />
+      <Field Name="MOVE_RIGHT_KEY" Hidden="true" />
+      <Field Name="MOVE_SPEED" Hidden="true" />
+      <Field Name="MOVE_UP_KEY" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Struct Name="Player::PlayerMovementMatrix">
+        <TypeIdentifier>
+          <NewMemberFileName>src\game\Player.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAACAEAgABACAAAAIKAAgACAAABAAAIAIAAAYAAAAA=</HashCode>
+      <FileName>src\game\Player.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine">
+    <Position X="12.5" Y="0.75" Width="2.25" />
+    <Members>
+      <Method Name="~Engine" Hidden="true" />
+      <Method Name="Engine" Hidden="true" />
+      <Field Name="FPS_N_AVERAGE" Hidden="true" />
+      <Field Name="m_changingState" Hidden="true" />
+      <Field Name="m_fpsCounter" Hidden="true" />
+      <Method Name="pointContainedInBox" Hidden="true" />
+      <Field Name="RENDERER_FLAGS" Hidden="true" />
+      <Method Name="renderFPS" Hidden="true" />
+      <Method Name="reportFinishedFrame" Hidden="true" />
+      <Method Name="transitionGameState" Hidden="true" />
+      <Field Name="WINDOW_DEFAULT_XPOS" Hidden="true" />
+      <Field Name="WINDOW_DEFAULT_YPOS" Hidden="true" />
+      <Field Name="WINDOW_FLAGS" Hidden="true" />
+      <Field Name="WINDOW_HEIGHT" Hidden="true" />
+      <Field Name="WINDOW_WIDTH" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>QQBAgABQGYRAIBAAAAACCABAACABAAxITEAggQgAAAA=</HashCode>
+      <FileName>src\Engine.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameState">
+    <Position X="18.75" Y="0.75" Width="1.5" />
+    <Members>
+      <Method Name="~GameState" Hidden="true" />
+      <Method Name="GameState" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>gQAAAAAAAAAAgAAAAAIACAAAAAgAAEQAAAEAIBgAMAA=</HashCode>
+      <FileName>src\GameState.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MainMenu">
+    <Position X="15.75" Y="5" Width="2" />
+    <Members>
+      <Method Name="creditsHandle" Hidden="true" />
+      <Field Name="GAME_NAME" Hidden="true" />
+      <Method Name="helpHandle" Hidden="true" />
+      <Method Name="MainMenu" Hidden="true" />
+      <Method Name="playHandle" Hidden="true" />
+      <Field Name="TITLE_FONT" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAQQAAABQAAAAIAACABAAIACQAAA=</HashCode>
+      <FileName>src\MainMenu.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HelpScreen">
+    <Position X="18.75" Y="5" Width="1.5" />
+    <Members>
+      <Field Name="HELP_TEXT" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAgABAAAAQAAACAAAAAAAAAAAAEIAAAAAA=</HashCode>
+      <FileName>src\HelpScreen.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CreditsScreen">
+    <Position X="18.75" Y="8" Width="1.5" />
+    <Members>
+      <Field Name="CREDIT_TEXT" Hidden="true" />
+      <Method Name="CreditsScreen" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAIAAAAAA=</HashCode>
+      <FileName>src\CreditsScreen.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameLoading">
+    <Position X="21" Y="5" Width="1.5" />
+    <Members>
+      <Method Name="GameLoading" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>src\GameLoading.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PhysicsEngine">
+    <Position X="14.75" Y="0.75" Width="2" />
+    <Members>
+      <Method Name="getCollisions" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAACIAAAAAAAAAAA=</HashCode>
+      <FileName>src\game\PhysicsEngine.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
