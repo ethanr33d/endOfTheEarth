@@ -54,6 +54,9 @@
     <ClCompile Include="src\UI\TextNode.cpp" />
     <ClCompile Include="src\UI\UIFrame.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
