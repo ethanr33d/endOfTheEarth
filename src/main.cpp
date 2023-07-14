@@ -23,6 +23,7 @@ int main(int, char**) {
 
 	while (!readyToQuit) {
 		readyToQuit = gameEngine.handleEvents(); 
+		gameEngine.physicsStep();
 		gameEngine.renderFrame();
 	}
 

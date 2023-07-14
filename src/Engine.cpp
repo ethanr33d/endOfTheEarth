@@ -260,6 +260,10 @@ bool Engine::handleEvents() {
 	return false; // don't quit by default
 }
 
+void Engine::physicsStep() {
+	m_physicsEngine.step();
+}
+
 void Engine::renderFrame() {
 	m_gameStates.top()->drawFrame();
 	renderFPS(); // draw FPS counter

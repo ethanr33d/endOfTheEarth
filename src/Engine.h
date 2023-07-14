@@ -92,6 +92,9 @@ class Engine {
 		// Returns bool which indicates whether application should quit
 		bool handleEvents();
 
+		// Handle any physics simulation if any
+		void physicsStep();
+
 		// Responsible for rendering current frame based on current game state
 		
 		void renderFrame();
