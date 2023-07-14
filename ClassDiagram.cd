@@ -115,7 +115,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="GameState">
-    <Position X="18.75" Y="0.75" Width="1.5" />
+    <Position X="18.5" Y="0.75" Width="2.25" />
     <Members>
       <Method Name="~GameState" Hidden="true" />
       <Method Name="GameState" Hidden="true" />
