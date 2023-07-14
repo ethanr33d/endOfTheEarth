@@ -2,6 +2,7 @@
 
 #include "GameState.h"
 #include "game/GameData.h"
+#include "game/Vector2.h"
 
 class GameLoading : public GameState {
 	private:
