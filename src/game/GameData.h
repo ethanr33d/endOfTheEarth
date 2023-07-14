@@ -4,15 +4,15 @@
 
 #include "game/Player.h"
 #include "game/PhysicsEngine.h"
-#include "UI/UIFrame.h"
+#include "game/Brick.h"
 
 struct GameData {
 	Player player;
-	UIFrame frame1;
-	UIFrame frame2;
-	UIFrame frame3;
+	Brick brick1;
+	Brick brick2;
+	Brick brick3;
 	// other useful state information here
 
 	GameData(SDL_Renderer* renderer, PhysicsEngine& physicsEngine)
-		: player(Player(renderer, physicsEngine)), frame1(renderer), frame2(renderer), frame3(renderer) {};
+		: player(Player(renderer)), brick1(renderer), brick2(renderer), brick3(renderer) {};
 };
