@@ -1,19 +1,32 @@
 #pragma once
 
 #include <vector>
-#include "../Drawable.h"
+#include <cmath>
+#include "PhysicsElement.h"
+#include "Vector2.h"
+#include "PhysicsRect.h"
 
 class PhysicsEngine {
 	private:
-	std::vector<Drawable*> m_collidableElements;
-
-	std::vector<SDL_Rect> getCollisions(const SDL_Rect& queryRect, const Drawable* ignoreElement = nullptr);
+	std::vector<PhysicsElement*> m_collidableElements;
+	int lastFrameTime;
+	std::vector<PhysicsRect> getCollisions(const PhysicsRect& queryRect, const PhysicsElement* ignoreElement = nullptr);
 
 	public:
 		// return the nearest valid coordinates to desiredBounds such that there are no collisions 
 		// between any objects. 
 		// NOTE: Assumes that currentBounds are valid. 
-		SDL_Rect getNearestValidCoords(const Drawable* element, const int destX, const int destY);
-		void addCollidableElement(Drawable* element);
+		PhysicsEngine() : lastFrameTime(0) {};
+		Vector2 getNearestValidCoords(const PhysicsElement* element, const double destX, const double destY);
+		void addCollidableElement(PhysicsElement* element);
+		void step();
+
+		/* general use physics functions */
+
+		// get magnitude of a vector
+		static double getMagnitude(const Vector2& vector);
+
+		// normalize vector to length of 1
+		static Vector2 normalizeVector(const Vector2& vector);
 };
 
