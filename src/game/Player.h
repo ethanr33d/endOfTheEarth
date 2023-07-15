@@ -16,22 +16,19 @@ class Player : public PhysicsElement, public IKeyboardListener {
 		inline static const double MOVE_ACCELERATION = 150; // how fast move speed is achieved
 
 		struct PlayerMovementMatrix {
-			double moveLeft; int leftKeyTime; // move___ = speed of movement in that direction
-			double moveRight; int rightKeyTime; // keyTime = time key was pressed
-			double moveUp; int upKeyTime;
-			double moveDown; int downKeyTime;
+			double moveLeft; // move___ = speed of movement in that direction
+			double moveRight;
+			double moveUp;
+			double moveDown;
 
-			PlayerMovementMatrix() : moveLeft(false), leftKeyTime(0),
-				moveRight(false), rightKeyTime(0),
-				moveUp(false), upKeyTime(0),
-				moveDown(false), downKeyTime(0) {}; // default initializer
+			PlayerMovementMatrix() : moveLeft(false), moveRight(false), moveUp(false), 
+				moveDown(false) {}; // default initializer
 		} m_movementMatrix;
 
 		// when key event comes in, update matrix as appropriate.
 		// @param key: key that was pressed
 		// @param relativeSpeed: speed to move, relative to the direction of movement
-		// @param time: time of event, unnecessary for keyUp
-		void adjustMovementMatrix(SDL_Keycode key, double relativeSpeed, int time = 0);
+		void adjustMovementMatrix(SDL_Keycode key, double relativeSpeed);
 	public:
 		Player(SDL_Renderer* renderer) : PhysicsElement(renderer) { setMaxVelocity(MOVE_SPEED); };
 
