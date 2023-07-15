@@ -27,8 +27,12 @@ void PhysicsElement::setAcceleration(const Vector2& acceleration) {
 	m_acceleration = acceleration;
 }
 
-void PhysicsElement::setAnchored(const bool anchor) {
-	m_anchored = anchor;
+void PhysicsElement::setAnchored(const bool anchored) {
+	m_anchored = anchored;
+}
+
+void PhysicsElement::setCollidable(const bool collidable) {
+	m_collidable = collidable;
 }
 
 void PhysicsElement::setMaxVelocity(const double maxVelocity) {
@@ -53,6 +57,10 @@ Vector2 PhysicsElement::getAcceleration() const {
 
 bool PhysicsElement::isAnchored() {
 	return m_anchored;
+}
+
+bool PhysicsElement::isCollidable() {
+	return m_collidable;
 }
 
 double PhysicsElement::getMaxVelocity() {

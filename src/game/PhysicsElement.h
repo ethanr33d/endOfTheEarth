@@ -15,12 +15,13 @@ class PhysicsElement {
 	Vector2 m_velocity;
 	Vector2 m_acceleration;
 
-	bool m_anchored;
+	bool m_anchored; // whether object moves, default = false
+	bool m_collidable; // whether collision checks are enabled, default = true
 	double m_maxVelocity;
 
 	public:
 	PhysicsElement(SDL_Renderer* renderer) : m_renderer(renderer), 
-		m_maxVelocity(INT_MAX), m_anchored(false) {};
+		m_maxVelocity(INT_MAX), m_anchored(false), m_collidable(true) {};
 
 	// safe modifiers that add to current vectors
 	void applyVelocity(const Vector2& velocity);
@@ -31,7 +32,8 @@ class PhysicsElement {
 	void setVelocity(const Vector2& velocity); 
 	void setAcceleration(const Vector2& acceleration);
 
-	void setAnchored(const bool anchor);
+	void setAnchored(const bool anchored);
+	void setCollidable(const bool collidable);
 	void setMaxVelocity(const double maxVelocity);
 
 	Vector2 getSize() const;
@@ -41,6 +43,7 @@ class PhysicsElement {
 	
 	double getMaxVelocity();
 	bool isAnchored();
+	bool isCollidable();
 
 	SDL_Rect getIntCastedBounds() const;
 	PhysicsRect getBounds() const;
