@@ -69,9 +69,10 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Player">
-    <Position X="9.5" Y="4.5" Width="1.5" />
+    <Position X="9.75" Y="13" Width="1.75" />
     <Members>
       <Method Name="adjustMovementMatrix" Hidden="true" />
+      <Field Name="MOVE_ACCELERATION" Hidden="true" />
       <Field Name="MOVE_DOWN_KEY" Hidden="true" />
       <Field Name="MOVE_LEFT_KEY" Hidden="true" />
       <Field Name="MOVE_RIGHT_KEY" Hidden="true" />
@@ -86,7 +87,7 @@
       </Struct>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAACAEAgABACAAAAIKAAgACAAABAAAIAIAAAYAAAAA=</HashCode>
+      <HashCode>AAAAAAAAgADACAAAAIKAAgAAAAABAAAAAIAAAYAAAAA=</HashCode>
       <FileName>src\game\Player.h</FileName>
     </TypeIdentifier>
   </Class>
@@ -176,9 +177,37 @@
     <Members>
       <Method Name="getCollisions" Hidden="true" />
     </Members>
+    <NestedTypes>
+      <Enum Name="PhysicsEngine::AXIS" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\game\PhysicsEngine.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAACIAAAAAAAAAAA=</HashCode>
+      <HashCode>ACAAAAIIMAAAAAAAAAABEAAAAAAgAgAAAAAAAAAAAAA=</HashCode>
       <FileName>src\game\PhysicsEngine.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Brick">
+    <Position X="12.75" Y="13" Width="1.5" />
+    <Members>
+      <Method Name="Brick" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIBAAAAAAAAAAAAAAAAAAgIAAA=</HashCode>
+      <FileName>src\game\Brick.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PhysicsElement">
+    <Position X="11" Y="6.25" Width="1.75" />
+    <Members>
+      <Field Name="m_renderer" Hidden="true" />
+      <Method Name="PhysicsElement" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>BAAIKIAAAKAQBAgQhAIAAAAKAgAAAARAAABAAwJQAAA=</HashCode>
+      <FileName>src\game\PhysicsElement.h</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
