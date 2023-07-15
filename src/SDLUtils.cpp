@@ -91,3 +91,12 @@ SDL_Texture* SDLUtils::createTextTexture(SDL_Renderer* renderer, TTF_Font* font,
 	
 	return textTexture;
 }
+
+SDL_Color SDLUtils::getRandomColor() {
+	return SDL_Color{
+		static_cast<Uint8>(rand() % 256),
+		static_cast<Uint8>(rand() % 256),
+		static_cast<Uint8>(rand() % 256),
+		static_cast<Uint8>(rand() % 256)
+	};
+}

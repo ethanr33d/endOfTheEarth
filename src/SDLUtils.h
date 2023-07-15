@@ -6,6 +6,7 @@
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL_ttf.h"
 #include <iostream>
+#include <cmath>
 
 namespace SDLUtils {
 	// constants
@@ -30,5 +31,8 @@ namespace SDLUtils {
 	// quality text rendering
 	SDL_Texture* createTextTexture(SDL_Renderer* renderer, TTF_Font* font, const std::string& msg,
 								   const SDL_Color& = {0,0,0, 255}, const bool wrapped=false);
+
+	// return random color
+	SDL_Color getRandomColor();
 
 }
