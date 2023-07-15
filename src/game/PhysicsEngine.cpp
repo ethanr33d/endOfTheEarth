@@ -40,7 +40,7 @@ double PhysicsEngine::getValidTranslationCoordByAxis(const PhysicsElement* eleme
 
 	double resultPos = currentBox.*axis; // default to old position
 
-	// if no cange desired on axis skip checking
+	// if no change desired on axis skip checking
 	if (destPos != currentBox.*axis) {
 
 		// create a query rectangle between currentPos and destPos to find elements blocking path
@@ -78,6 +78,7 @@ double PhysicsEngine::getValidTranslationCoordByAxis(const PhysicsElement* eleme
 				smallestBox.*axis - currentBox.*size : smallestBox.*axis + smallestBox.*size;
 		}
 	}
+
 	return resultPos;
 }
 
