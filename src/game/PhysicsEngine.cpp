@@ -4,9 +4,10 @@
 std::vector<PhysicsRect> PhysicsEngine::getCollisions(const PhysicsRect& queryRect, const PhysicsElement* ignoreElement) {
 	std::vector<PhysicsRect> collidingElements;
 
-	for (PhysicsElement* element : m_collidableElements) {
-		if (element == ignoreElement) continue;
-
+	for (PhysicsElement* element : m_physicsElements) {
+		// check if element is collidable and element is not ignored
+		if (!element->isCollidable() || element == ignoreElement) continue; 
+		
 		PhysicsRect eleBounds = element->getBounds();
 
 		// if colliding on both x and y axis then they are truely colliding
@@ -20,81 +21,75 @@ std::vector<PhysicsRect> PhysicsEngine::getCollisions(const PhysicsRect& queryRe
 	return collidingElements;
 }
 
-Vector2 PhysicsEngine::getNearestValidCoords(const PhysicsElement* element, const double destX, const double destY) {
+double PhysicsEngine::getValidTranslationCoordByAxis(const PhysicsElement* element, AXIS targetAxis, const double destPos) {
 	PhysicsRect currentBox = element->getBounds();
-	PhysicsRect destBox = currentBox; // default back to original position if no possible movement
+	
+	double PhysicsRect::* axis{};
+	double PhysicsRect::* size{};
 
-	// if no change desired on axis skip checking
-	if (destX != currentBox.x) {
+	switch (targetAxis) {
+		case X_AXIS:
+			axis = &PhysicsRect::x;
+			size = &PhysicsRect::w;
+			break;
+		case Y_AXIS:
+			axis = &PhysicsRect::y;
+			size = &PhysicsRect::h;
+			break;
+	}
+
+	double resultPos = currentBox.*axis; // default to old position
+
+	// if no cange desired on axis skip checking
+	if (destPos != currentBox.*axis) {
+
 		// create a query rectangle between currentPos and destPos to find elements blocking path
-		PhysicsRect queryRect{ currentBox.x + currentBox.w, currentBox.y,
-			abs(destX - currentBox.x), currentBox.h };
+		PhysicsRect queryRect = currentBox;
 
-		if (destX < currentBox.x) {
-			queryRect.x = destX;
+		queryRect.*axis = currentBox.*axis + currentBox.*size; // positions queryRect at end of currrentBox
+		queryRect.*size = abs(destPos - currentBox.*axis); // size of queryRect is the difference in position
+
+		if (destPos < currentBox.*axis) { // if destPos currentBox position, back queryRect up before currentBox
+			queryRect.*axis = destPos;
 		}
 
 		std::vector<PhysicsRect> collisions = getCollisions(queryRect, element);
 
-		if (collisions.size() == 0) { // no collisions, safe to move
-			destBox.x = destX;
-		}
-		else {
-			PhysicsRect smallestBox{ INT_MAX, 0, 0, 0 };
+		if (collisions.size() == 0) { // path is clear
+			resultPos = destPos; 
+		} else { // there is a collision, find the nearest one
+			PhysicsRect smallestBox{ 0, 0, 0, 0 };
+			double smallestDist = INT_MAX;
 
 			// find the nearest collision to currentPos
 			for (const PhysicsRect& box : collisions) {
-				if (abs(box.x - currentBox.x) < smallestBox.x) {
+				// take the smaller of the distances to the top/bottom or left/right sides of the box
+				double dist = fmin(abs(box.*axis - currentBox.*axis), abs(box.*axis + box.*size - currentBox.*axis));
+
+				if (dist < smallestDist) {
 					smallestBox = box;
+					smallestDist = dist;
 				}
 			}
 
 			// back destRect up so it doesn't collide with smallestBox
-			destBox.x = currentBox.x < smallestBox.x ? smallestBox.x - currentBox.w : smallestBox.x + smallestBox.w;
+			// if currentPosition < collisionPosition adjust box to before collision, otherwise move it after
+			resultPos = currentBox.*axis < smallestBox.*axis ? 
+				smallestBox.*axis - currentBox.*size : smallestBox.*axis + smallestBox.*size;
 		}
 	}
-
-	if (destY != currentBox.y) {
-		// create a query rectangle between currentPos and destPos to find elements blocking path
-		// using destRect for x since x position may have changed from above
-		PhysicsRect queryRect{ destBox.x, currentBox.y + currentBox.h, 
-			currentBox.w, abs(destY - currentBox.y)};
-
-		if (destY < currentBox.y) {
-			queryRect.y = destY;
-		}
-		std::vector<PhysicsRect> collisions = getCollisions(queryRect, element);
-
-		if (collisions.size() == 0) { // no collisions, safe to move
-			destBox.y = destY;
-		}
-		else {
-			PhysicsRect smallestBox{ 0, INT_MAX, 0, 0 };
-
-			// find the nearest collision to currentPos
-			for (const PhysicsRect& box : collisions) {
-				if (abs(box.y - currentBox.y) < smallestBox.y) {
-					smallestBox = box;
-				}
-				
-			}
-
-			destBox.y = currentBox.y < smallestBox.y ? smallestBox.y - currentBox.h : smallestBox.y + smallestBox.h;
-		}
-	}
-
-	return Vector2{ destBox.x, destBox.y };
+	return resultPos;
 }
 
-void PhysicsEngine::addCollidableElement(PhysicsElement* element) {
-	m_collidableElements.push_back(element);
+void PhysicsEngine::addPhysicsElement(PhysicsElement* element) {
+	m_physicsElements.insert(element);
 }
 
 void PhysicsEngine::step() {
 	int frameTickDifference = SDL_GetTicks() - lastFrameTime;
 	double timeElapsed = static_cast<double>(frameTickDifference) / 1000; // convert ms to s
 
-	for (PhysicsElement* element : m_collidableElements) {
+	for (PhysicsElement* element : m_physicsElements) {
 		if (element->isAnchored()) continue; // anchored elements don't move
 
 		element->applyVelocity(element->getAcceleration()); // add velocity from acceleration vector
@@ -104,7 +99,7 @@ void PhysicsEngine::step() {
 		Vector2 normalVelocity = normalizeVector(velocity);
 		double maxVelocity = element->getMaxVelocity();
 
-		element->applyVelocity(velocity * -.1);
+		element->applyVelocity(velocity * -.25); // Temporary global friction (otherwise newton's first law)
 		velocity = element->getVelocity();
 
 		if (getMagnitude(velocity) > maxVelocity) {
@@ -112,10 +107,19 @@ void PhysicsEngine::step() {
 			velocity = element->getVelocity(); // update to new velocity
 		}
 
-		std::cout << velocity.x << "; " << velocity.y << std::endl;
 		double newPosX = position.x + velocity.x * timeElapsed;
-		double newPosY = position.y + velocity.y * timeElapsed;
-		element->setPosition(getNearestValidCoords(element, newPosX, newPosY));
+		double newPosY = position.y + velocity.y * timeElapsed; // calculate new position from velocity
+		
+		if (element->isCollidable()) { // if collidable make collision checks, else directly set pos
+			Vector2 collisionAdjustedPos;
+
+			collisionAdjustedPos.x = getValidTranslationCoordByAxis(element, X_AXIS, newPosX);
+			collisionAdjustedPos.y = getValidTranslationCoordByAxis(element, Y_AXIS, newPosY);
+			element->setPosition(collisionAdjustedPos);
+		}
+		else {
+			element->setPosition(Vector2{newPosX, newPosY});
+		}
 	}
 
 	lastFrameTime = SDL_GetTicks();
