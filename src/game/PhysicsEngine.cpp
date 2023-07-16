@@ -1,8 +1,9 @@
 #include "PhysicsEngine.h"
 #include <iostream>
 
-std::vector<PhysicsRect> PhysicsEngine::getCollisions(const PhysicsRect& queryRect, const PhysicsElement* ignoreElement) {
-	std::vector<PhysicsRect> collidingElements;
+std::vector<PhysicsElement*> PhysicsEngine::getCollisions(const PhysicsRect& queryRect,
+	const PhysicsElement* ignoreElement) {
+	std::vector<PhysicsElement*> collidingElements;
 
 	for (PhysicsElement* element : m_physicsElements) {
 		// check if element is collidable and element is not ignored
@@ -14,14 +15,15 @@ std::vector<PhysicsRect> PhysicsEngine::getCollisions(const PhysicsRect& queryRe
 		if (queryRect.x < eleBounds.x + eleBounds.w && queryRect.x + queryRect.w > eleBounds.x
 				&& queryRect.y < eleBounds.y + eleBounds.h  && queryRect.y + queryRect.h > eleBounds.y) {
 
-			collidingElements.push_back(eleBounds);
+			collidingElements.push_back(element);
 		}
 	}
 
 	return collidingElements;
 }
 
-double PhysicsEngine::getValidTranslationCoordByAxis(const PhysicsElement* element, AXIS targetAxis, const double destPos) {
+PhysicsEngine::ValidTranslationCoordResult PhysicsEngine::getValidTranslationCoordByAxis(const PhysicsElement* element,
+	AXIS targetAxis, const double destPos) {
 	PhysicsRect currentBox = element->getBounds();
 	
 	double PhysicsRect::* axis{};
@@ -39,6 +41,7 @@ double PhysicsEngine::getValidTranslationCoordByAxis(const PhysicsElement* eleme
 	}
 
 	double resultPos = currentBox.*axis; // default to old position
+	PhysicsElement* nearestCollision = nullptr; // default = no collision
 
 	// if no change desired on axis skip checking
 	if (destPos != currentBox.*axis) {
@@ -53,33 +56,35 @@ double PhysicsEngine::getValidTranslationCoordByAxis(const PhysicsElement* eleme
 			queryRect.*axis = destPos;
 		}
 
-		std::vector<PhysicsRect> collisions = getCollisions(queryRect, element);
+		std::vector<PhysicsElement*> collisions = getCollisions(queryRect, element);
 
 		if (collisions.size() == 0) { // path is clear
 			resultPos = destPos; 
 		} else { // there is a collision, find the nearest one
-			PhysicsRect smallestBox{ 0, 0, 0, 0 };
 			double smallestDist = INT_MAX;
+			nearestCollision = collisions[0]; // prevent nullptr dereference
 
 			// find the nearest collision to currentPos
-			for (const PhysicsRect& box : collisions) {
+			for (PhysicsElement* collidingElement : collisions) {
+				PhysicsRect box = collidingElement->getBounds();
 				// take the smaller of the distances to the top/bottom or left/right sides of the box
 				double dist = fmin(abs(box.*axis - currentBox.*axis), abs(box.*axis + box.*size - currentBox.*axis));
 
 				if (dist < smallestDist) {
-					smallestBox = box;
+					nearestCollision = collidingElement;
 					smallestDist = dist;
 				}
 			}
 
+			PhysicsRect smallestBox = nearestCollision->getBounds();
 			// back destRect up so it doesn't collide with smallestBox
 			// if currentPosition < collisionPosition adjust box to before collision, otherwise move it after
-			resultPos = currentBox.*axis < smallestBox.*axis ? 
+			resultPos = currentBox.*axis < smallestBox.*axis ?
 				smallestBox.*axis - currentBox.*size : smallestBox.*axis + smallestBox.*size;
 		}
 	}
 
-	return resultPos;
+	return ValidTranslationCoordResult{ resultPos, nearestCollision };
 }
 
 void PhysicsEngine::addPhysicsElement(PhysicsElement* element) {
@@ -93,20 +98,35 @@ void PhysicsEngine::step() {
 	for (PhysicsElement* element : m_physicsElements) {
 		if (element->isAnchored()) continue; // anchored elements don't move
 
-		element->applyVelocity(element->getAcceleration()); // add velocity from acceleration vector
-
+		element->applyVelocity(element->getAcceleration() * timeElapsed); // add velocity from acceleration vector
+		//std::cout << "velAdded" << element->getAcceleration() * timeElapsed;
 		Vector2 position = element->getPosition();
 		Vector2 velocity = element->getVelocity();
 		Vector2 normalVelocity = normalizeVector(velocity);
-		double maxVelocity = element->getMaxVelocity();
+		Vector2 maxVelocity = element->getMaxVelocity();
+		double friction = AIR_RESISTANCE * GRAVITY * timeElapsed;
 
-		element->applyVelocity(velocity * -.25); // Temporary global friction (otherwise newton's first law)
+		if (element->isGrounded()) {
+			friction = element->getGroundingElement()->getFrictionConstant() * GRAVITY * timeElapsed;
+			//std::cout << "friction:" << friction;
+		}
+
+		if (abs(velocity.x) > friction) {
+			// apply kinetic friction in direction opposite motion
+			element->applyVelocity(Vector2{ -copysign(friction, velocity.x), 0 });
+		}
+		else {
+			//static friction overcomes motion
+			element->setVelocity(Vector2{ 0, velocity.y });
+		}
+
+		element->applyVelocity(Vector2{ 0, GRAVITY } *timeElapsed); // gravity
 		velocity = element->getVelocity();
 
-		if (getMagnitude(velocity) > maxVelocity) {
-			element->setVelocity(normalizeVector(velocity) * maxVelocity); // normalize and scale to max velocity
-			velocity = element->getVelocity(); // update to new velocity
-		}
+		// clamp axial velocities to their respective maximums
+		element->setVelocity(Vector2{ SDL_clamp(velocity.x, -maxVelocity.x, maxVelocity.x),
+			SDL_clamp(velocity.y, -maxVelocity.y, maxVelocity.y) });
+		velocity = element->getVelocity();
 
 		double newPosX = position.x + velocity.x * timeElapsed;
 		double newPosY = position.y + velocity.y * timeElapsed; // calculate new position from velocity
@@ -119,29 +139,56 @@ void PhysicsEngine::step() {
 			// high speed or lagging
 			
 			// fix x axis
-			collisionAdjustedPos.x = getValidTranslationCoordByAxis(element, X_AXIS, newPosX);
+			ValidTranslationCoordResult XTranslationReq = getValidTranslationCoordByAxis(element, X_AXIS, newPosX);
+			collisionAdjustedPos.x = XTranslationReq.pos;
 			element->setPosition(collisionAdjustedPos);
 
 			// fix y axis
-			collisionAdjustedPos.y = getValidTranslationCoordByAxis(element, Y_AXIS, newPosY);
+			ValidTranslationCoordResult YTranslationReq = getValidTranslationCoordByAxis(element, Y_AXIS, newPosY);
+			collisionAdjustedPos.y = YTranslationReq.pos;
 			element->setPosition(collisionAdjustedPos);
-			std::cout << collisionAdjustedPos.x << "," << collisionAdjustedPos.y << std::endl;
+
+			// if x collided with an element, reset velocity to 0
+			if (XTranslationReq.collidingElement) {
+				element->setVelocity(Vector2{ 0, velocity.y });
+				velocity.x = 0;
+			}
+
+			// if y collided with an element from below, reset velocity to 0 and ground element
+			if (YTranslationReq.collidingElement) {
+				element->setVelocity(Vector2{ velocity.x, 0 });
+
+				// if collision adjusted is less than requested, element must have hit ground
+				if (collisionAdjustedPos.y < newPosY) {
+					element->setGroundingElement(YTranslationReq.collidingElement);
+					element->setGrounded(true); 
+				}
+			}
+			else {
+				// avoid redundant calls if element is already in free fall
+				if (element->isGrounded()) {
+					element->setGrounded(false);
+				}
+			}
 		}
 		else {
 			element->setPosition(Vector2{newPosX, newPosY});
 		}
+
+		//std::cout << "ground: " << element->getGroundingElement() << ";";
+		//std::cout << "Acceleration: " << element->getAcceleration() << "; Velocity: " << element->getVelocity() << std::endl;
 	}
 
 	lastFrameTime = SDL_GetTicks();
 }
 
-double PhysicsEngine::getMagnitude(const Vector2& vector) {
+double PhysicsEngine::magnitude(const Vector2& vector) {
 	return sqrt((vector.x * vector.x) + (vector.y * vector.y));
 }
 
 Vector2 PhysicsEngine::normalizeVector(const Vector2& vector) {
-	double magnitude = getMagnitude(vector);
+	double vecMagnitude = magnitude(vector);
 
-	if (magnitude == 0) return vector;
-	return Vector2{ vector.x / magnitude, vector.y / magnitude };
+	if (vecMagnitude == 0) return vector;
+	return Vector2{ vector.x / vecMagnitude, vector.y / vecMagnitude };
 }
