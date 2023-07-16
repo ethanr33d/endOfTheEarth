@@ -35,8 +35,20 @@ void PhysicsElement::setCollidable(const bool collidable) {
 	m_collidable = collidable;
 }
 
-void PhysicsElement::setMaxVelocity(const double maxVelocity) {
+void PhysicsElement::setMaxVelocity(const Vector2& maxVelocity) {
 	m_maxVelocity = maxVelocity;
+}
+
+void PhysicsElement::setFrictionConstant(const double friction) {
+	m_frictionConstant = friction;
+}
+
+void PhysicsElement::setGrounded(const bool grounded) {
+	m_grounded = grounded;
+}
+
+void PhysicsElement::setGroundingElement(PhysicsElement* element) {
+	m_groundedBy = element;
 }
 
 Vector2 PhysicsElement::getSize() const {
@@ -55,17 +67,30 @@ Vector2 PhysicsElement::getAcceleration() const {
 	return m_acceleration;
 }
 
-bool PhysicsElement::isAnchored() {
+bool PhysicsElement::isAnchored() const {
 	return m_anchored;
 }
 
-bool PhysicsElement::isCollidable() {
+bool PhysicsElement::isCollidable() const {
 	return m_collidable;
 }
 
-double PhysicsElement::getMaxVelocity() {
+Vector2 PhysicsElement::getMaxVelocity() const {
 	return m_maxVelocity;
 }
+
+double PhysicsElement::getFrictionConstant() const {
+	return m_frictionConstant;
+}
+
+bool PhysicsElement::isGrounded() const {
+	return m_grounded;
+}
+
+PhysicsElement* PhysicsElement::getGroundingElement() const {
+	return m_groundedBy;
+}
+
 
 SDL_Rect PhysicsElement::getIntCastedBounds() const {
 	return SDL_Rect{ static_cast<int>(m_position.x), 

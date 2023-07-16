@@ -9,7 +9,7 @@ class PhysicsElement {
 	protected:
 	SDL_Renderer* m_renderer;
 
-	// these should only be set using modifiers below
+	// these should only be set using modifying functions
 	Vector2 m_size;
 	Vector2 m_position;
 	Vector2 m_velocity;
@@ -17,11 +17,17 @@ class PhysicsElement {
 
 	bool m_anchored; // whether object moves, default = false
 	bool m_collidable; // whether collision checks are enabled, default = true
-	double m_maxVelocity;
+	Vector2 m_maxVelocity; // max velocity (by magnitude) allowed along each axis
+	double m_frictionConstant; // Affects the friction amount applied by elements grounded by this element
+
+	// state information for element
+	bool m_grounded; // whether element is grounded
+	PhysicsElement* m_groundedBy; // element that this element is grounded against
 
 	public:
 	PhysicsElement(SDL_Renderer* renderer) : m_renderer(renderer), 
-		m_maxVelocity(INT_MAX), m_anchored(false), m_collidable(true) {};
+		m_maxVelocity(Vector2{INT_MAX, INT_MAX}), m_anchored(false),
+		m_collidable(true), m_frictionConstant(0.5), m_grounded(false), m_groundedBy(nullptr) {};
 
 	// safe modifiers that add to current vectors
 	void applyVelocity(const Vector2& velocity);
@@ -34,16 +40,25 @@ class PhysicsElement {
 
 	void setAnchored(const bool anchored);
 	void setCollidable(const bool collidable);
-	void setMaxVelocity(const double maxVelocity);
+	void setMaxVelocity(const Vector2& maxVelocity);
+	void setFrictionConstant(const double friction);
+
+	// these allow overloads if element needs to perform extra processing
+	virtual void setGrounded(const bool grounded);
+	virtual void setGroundingElement(PhysicsElement* element);
 
 	Vector2 getSize() const;
 	Vector2 getPosition() const;
 	Vector2 getVelocity() const;
 	Vector2 getAcceleration() const;
 	
-	double getMaxVelocity();
-	bool isAnchored();
-	bool isCollidable();
+	bool isAnchored() const;
+	bool isCollidable() const;
+	Vector2 getMaxVelocity() const;
+	double getFrictionConstant() const;
+
+	bool isGrounded() const;
+	PhysicsElement* getGroundingElement() const;
 
 	SDL_Rect getIntCastedBounds() const;
 	PhysicsRect getBounds() const;
