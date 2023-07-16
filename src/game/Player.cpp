@@ -1,37 +1,63 @@
 #include "Player.h"
 #include <iostream>
-void Player::adjustMovementMatrix(SDL_Keycode key, double relativeSpeed) {
+
+void Player::applyAccelerationFromMatrix() {
+	applyAcceleration(-m_inputAcceleration); // reset acceleration from input
+
+	Vector2 newAcceleration;
+	double friction = PhysicsEngine::AIR_RESISTANCE;
+
+	if (m_grounded && m_groundedBy) {
+		friction = m_groundedBy->getFrictionConstant();
+	}
+
+	std::cout << "grounded by " << friction << std::endl;
+	newAcceleration.x = (-1 * m_movementMatrix.moveLeft + m_movementMatrix.moveRight) 
+		* MOVE_ACCELERATION * friction;
+
+	m_inputAcceleration = newAcceleration;
+	applyAcceleration(newAcceleration);
+}
+
+void Player::adjustMovementMatrixFromInput(SDL_Keycode key, bool keyState) {
+	double friction = PhysicsEngine::AIR_RESISTANCE;
+
+	if (m_groundedBy) {
+		friction = m_groundedBy->getFrictionConstant();
+	}
 	switch (key) {
 		case MOVE_UP_KEY:
-			// reset acceleration to make sure multiple key down/up doesn't double movespeed
-			applyAcceleration(Vector2{ 0, m_movementMatrix.moveUp });
-			m_movementMatrix.moveUp = relativeSpeed;
-			applyAcceleration(Vector2{ 0, -relativeSpeed }); // up = negative Y
+		case SECONDARY_UP_KEY:
+			m_movementMatrix.jump = keyState;
 			break;
 		case MOVE_RIGHT_KEY:
-			applyAcceleration(Vector2{ -m_movementMatrix.moveRight, 0 });
-			m_movementMatrix.moveRight = relativeSpeed;
-			applyAcceleration(Vector2{ relativeSpeed, 0 });
-			break;
-		case MOVE_DOWN_KEY:
-			applyAcceleration(Vector2{ 0, -m_movementMatrix.moveDown });
-			m_movementMatrix.moveDown = relativeSpeed;
-			applyAcceleration(Vector2{ 0, relativeSpeed });
+			m_movementMatrix.moveRight = keyState;
+			applyAccelerationFromMatrix();
 			break;
 		case MOVE_LEFT_KEY:
-			applyAcceleration(Vector2{ m_movementMatrix.moveLeft, 0 });
-			m_movementMatrix.moveLeft = relativeSpeed;
-			applyAcceleration(Vector2{ -relativeSpeed, 0 }); // right = negative X
+			m_movementMatrix.moveLeft = keyState;
+			applyAccelerationFromMatrix();
 			break;
 	}
 }
 
+void Player::setGrounded(const bool grounded) {
+	PhysicsElement::setGrounded(grounded); // default behavior
+
+	if (grounded && m_movementMatrix.jump) {
+		applyVelocity(Vector2{ 0, -JUMP_POWER });
+		std::cout << "jumping" << std::endl;
+	}
+
+	applyAccelerationFromMatrix();
+}
+
 void Player::keyDown(SDL_Keycode key) {
-	adjustMovementMatrix(key, MOVE_ACCELERATION); // move if key is down
+	adjustMovementMatrixFromInput(key, true); // move if key is down
 }
 
 void Player::keyUp(SDL_Keycode key) {
-	adjustMovementMatrix(key, 0); // stop moving if key is up
+	adjustMovementMatrixFromInput(key, false); // stop moving if key is up
 }
 
 void Player::draw() {
