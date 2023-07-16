@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ostream>
 // generic vector
 struct Vector2 {
 	double x;
@@ -17,6 +18,9 @@ struct Vector2 {
 		return Vector2{ this->x + vector.x, this->y + vector.y };
 	};
 
+	Vector2 operator-() {
+		return Vector2{ -this->x, -this->y };
+	}
 	Vector2 operator* (const double scalar) {
 		return Vector2{ this->x * scalar, this->y * scalar };
 	};
@@ -24,4 +28,9 @@ struct Vector2 {
 	Vector2 operator* (const int scalar) {
 		return Vector2{ this->x * static_cast<double>(scalar), this->y * static_cast<double>(scalar) };
 	};
+
+	friend std::ostream& operator<< (std::ostream& stream, const Vector2& vec) {
+		stream << '{' << vec.x << ',' << vec.y << '}';
+		return stream;
+	}
 };
