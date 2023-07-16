@@ -112,11 +112,20 @@ void PhysicsEngine::step() {
 		double newPosY = position.y + velocity.y * timeElapsed; // calculate new position from velocity
 		
 		if (element->isCollidable()) { // if collidable make collision checks, else directly set pos
-			Vector2 collisionAdjustedPos;
-
+			Vector2 collisionAdjustedPos = position;
+			
+			// checks for collisions axis by axis. It is possible to clip certain corners since
+			// each axis is checked and fixed indenpendently, but unlikely unless moving at
+			// high speed or lagging
+			
+			// fix x axis
 			collisionAdjustedPos.x = getValidTranslationCoordByAxis(element, X_AXIS, newPosX);
+			element->setPosition(collisionAdjustedPos);
+
+			// fix y axis
 			collisionAdjustedPos.y = getValidTranslationCoordByAxis(element, Y_AXIS, newPosY);
 			element->setPosition(collisionAdjustedPos);
+			std::cout << collisionAdjustedPos.x << "," << collisionAdjustedPos.y << std::endl;
 		}
 		else {
 			element->setPosition(Vector2{newPosX, newPosY});
