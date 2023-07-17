@@ -18,9 +18,20 @@ struct Vector2 {
 		return Vector2{ this->x + vector.x, this->y + vector.y };
 	};
 
+	Vector2& operator+= (const Vector2& vector) {
+		this->x = this->x + vector.x;
+		this->y = this->y + vector.y;
+		return *this;
+	}
+
 	Vector2 operator-() {
 		return Vector2{ -this->x, -this->y };
 	}
+
+	Vector2 operator-(const Vector2& vector) {
+		return Vector2{ this->x - vector.x, this->y - vector.y };
+	}
+
 	Vector2 operator* (const double scalar) {
 		return Vector2{ this->x * scalar, this->y * scalar };
 	};
