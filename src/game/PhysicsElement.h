@@ -8,6 +8,7 @@
 class PhysicsElement {
 	protected:
 	SDL_Renderer* m_renderer;
+	Vector2 m_drawablePosition; // computed by camera for final render position
 
 	// these should only be set using modifying functions
 	Vector2 m_size;
@@ -42,6 +43,7 @@ class PhysicsElement {
 	void setCollidable(const bool collidable);
 	void setMaxVelocity(const Vector2& maxVelocity);
 	void setFrictionConstant(const double friction);
+	void setDrawablePosition(const Vector2& position);
 
 	// these allow overloads if element needs to perform extra processing
 	virtual void setGrounded(const bool grounded);
@@ -60,7 +62,7 @@ class PhysicsElement {
 	bool isGrounded() const;
 	PhysicsElement* getGroundingElement() const;
 
-	SDL_Rect getIntCastedBounds() const;
+	SDL_Rect getRenderPosition() const;
 	PhysicsRect getBounds() const;
 	virtual void draw() = 0; // physics elements still need to be drawn
 };

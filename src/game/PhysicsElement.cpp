@@ -51,6 +51,10 @@ void PhysicsElement::setGroundingElement(PhysicsElement* element) {
 	m_groundedBy = element;
 }
 
+void PhysicsElement::setDrawablePosition(const Vector2& position) {
+	m_drawablePosition = position;
+}
+
 Vector2 PhysicsElement::getSize() const {
 	return m_size;
 }
@@ -92,9 +96,9 @@ PhysicsElement* PhysicsElement::getGroundingElement() const {
 }
 
 
-SDL_Rect PhysicsElement::getIntCastedBounds() const {
-	return SDL_Rect{ static_cast<int>(m_position.x), 
-		static_cast<int>(m_position.y),
+SDL_Rect PhysicsElement::getRenderPosition() const {
+	return SDL_Rect{ static_cast<int>(m_drawablePosition.x), 
+		static_cast<int>(m_drawablePosition.y),
 		static_cast<int>(m_size.x),
 		static_cast<int>(m_size.y)
 	};
