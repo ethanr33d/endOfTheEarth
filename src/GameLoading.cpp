@@ -1,9 +1,12 @@
 #include "GameLoading.h"
 #include <cmath>
 GameLoading::GameLoading(Engine& engine) : GameState(engine), 
-		m_game(GameData(engine.getRenderer(), engine.getPhysicsEngine())) {
-	m_game.player.setSize(Vector2{ 100, 100 });
-	m_game.player.setPosition(Vector2{ 450, 200 });
+		m_game(GameData(engine.getRenderer())) {
+	PhysicalWorld* simulaton = engine.getPhysicsSimulation();
+	Camera* camera = engine.getCamera();
+
+	m_game.player.setSize(Vector2{ 50, 50 });
+	m_game.player.setPosition(Vector2{ 300, -100 });
 	
 	srand(SDL_GetTicks());
 	for (int i = 0; i < 6; i++) {
@@ -14,7 +17,7 @@ GameLoading::GameLoading(Engine& engine) : GameState(engine),
 		newBrick->setColor(SDLUtils::getRandomColor());
 		newBrick->setAnchored(true);
 
-		engine.getPhysicsEngine().addPhysicsElement(newBrick);
+		simulaton->addElement(newBrick);
 		m_game.brickList.push_back(newBrick);
 	}
 
@@ -22,31 +25,34 @@ GameLoading::GameLoading(Engine& engine) : GameState(engine),
 	Brick* mud = new Brick(engine.getRenderer());
 	Brick* grass = new Brick(engine.getRenderer());
 
-	ice->setSize(Vector2{350, 100});
-	ice->setPosition(Vector2{350,400});
+	ice->setSize(Vector2{500, 500});
+	ice->setPosition(Vector2{0,400});
 	ice->setColor(SDL_Color{ 52, 168, 235, 255 });
-	ice->setFrictionConstant(0.05);
+	ice->setFrictionConstant(0.1);
 	ice->setAnchored(true);
 
-	mud->setSize(Vector2{350, 100});
-	mud->setPosition(Vector2{0,400});
-	mud->setColor(SDL_Color{ 120, 65, 35, 255 });
+	mud->setSize(Vector2{500, 500});
+	mud->setPosition(Vector2{-500,400});
+	mud->setColor(SDL_Color{ 100, 100, 100, 255 });
 	mud->setFrictionConstant(1);
 	mud->setAnchored(true);
 
-	grass->setSize(Vector2{350, 100});
-	grass->setPosition(Vector2{700,400});
+	grass->setSize(Vector2{500, 500});
+	grass->setPosition(Vector2{500,400});
 	grass->setColor(SDL_Color{ 87, 189, 40, 255 });
 	grass->setAnchored(true);
 
-	engine.getPhysicsEngine().addPhysicsElement(ice);
+	simulaton->addElement(ice);
 	m_game.brickList.push_back(ice);
-	engine.getPhysicsEngine().addPhysicsElement(mud);
+	simulaton->addElement(mud);
 	m_game.brickList.push_back(mud);
-	engine.getPhysicsEngine().addPhysicsElement(grass);
+	simulaton->addElement(grass);
 	m_game.brickList.push_back(grass);
 	registerKeyboardListener(&m_game.player);
-	engine.getPhysicsEngine().addPhysicsElement(&m_game.player);
+	simulaton->addElement(&m_game.player);
+
+	camera->setSubject(&m_game.player);
+	camera->setMode(CENTER_SUBJECT);
 
 }
 
