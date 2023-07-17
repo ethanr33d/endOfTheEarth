@@ -4,6 +4,7 @@
 #include <set>
 #include <cmath>
 #include "PhysicsElement.h"
+#include "PhysicalWorld.h"
 #include "Vector2.h"
 #include "PhysicsRect.h"
 
@@ -11,7 +12,7 @@ class PhysicsEngine {
 	private:
 		enum AXIS {X_AXIS, Y_AXIS};
 
-		std::set<PhysicsElement*> m_physicsElements; // all physics simulated elements
+		PhysicalWorld& m_simulation;
 
 		int lastFrameTime;
 		
@@ -23,8 +24,8 @@ class PhysicsEngine {
 
 	public:
 		inline static const double GRAVITY = 2000.0; // gravity acceleration const in px/s^2
-		inline static const double AIR_RESISTANCE = 0.01; // friction constant for elements in freefall
-		PhysicsEngine() : lastFrameTime(0) {};
+		inline static const double AIR_RESISTANCE = 0.25; // friction constant for elements in freefall
+		PhysicsEngine(PhysicalWorld& simulation) : lastFrameTime(0), m_simulation(simulation) {};
 
 		struct ValidTranslationCoordResult {
 			double pos; // calculated valid position in translation, on interval [currentPos, destPos]
@@ -43,7 +44,6 @@ class PhysicsEngine {
 		ValidTranslationCoordResult getValidTranslationCoordByAxis(const PhysicsElement* element, 
 			AXIS targetAxis, const double destPos);
 
-		void addPhysicsElement(PhysicsElement* element);
 		void step();
 
 		/* general use physics functions */

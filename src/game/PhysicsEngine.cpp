@@ -5,7 +5,7 @@ std::vector<PhysicsElement*> PhysicsEngine::getCollisions(const PhysicsRect& que
 	const PhysicsElement* ignoreElement) {
 	std::vector<PhysicsElement*> collidingElements;
 
-	for (PhysicsElement* element : m_physicsElements) {
+	for (PhysicsElement* element : *m_simulation.getElements()) {
 		// check if element is collidable and element is not ignored
 		if (!element->isCollidable() || element == ignoreElement) continue; 
 		
@@ -87,55 +87,51 @@ PhysicsEngine::ValidTranslationCoordResult PhysicsEngine::getValidTranslationCoo
 	return ValidTranslationCoordResult{ resultPos, nearestCollision };
 }
 
-void PhysicsEngine::addPhysicsElement(PhysicsElement* element) {
-	m_physicsElements.insert(element);
-}
-
 void PhysicsEngine::step() {
 	int frameTickDifference = SDL_GetTicks() - lastFrameTime;
 	double timeElapsed = static_cast<double>(frameTickDifference) / 1000; // convert ms to s
 
-	for (PhysicsElement* element : m_physicsElements) {
+	for (PhysicsElement* element : *m_simulation.getElements()) {
 		if (element->isAnchored()) continue; // anchored elements don't move
 
-		element->applyVelocity(element->getAcceleration() * timeElapsed); // add velocity from acceleration vector
-		//std::cout << "velAdded" << element->getAcceleration() * timeElapsed;
 		Vector2 position = element->getPosition();
 		Vector2 velocity = element->getVelocity();
 		Vector2 normalVelocity = normalizeVector(velocity);
 		Vector2 maxVelocity = element->getMaxVelocity();
 		double friction = AIR_RESISTANCE * GRAVITY * timeElapsed;
 
-		if (element->isGrounded()) {
+		velocity += element->getAcceleration() * timeElapsed; // add velocity from acceleration vector
+
+		// handle friction
+		if (element->isGrounded()) { 
 			friction = element->getGroundingElement()->getFrictionConstant() * GRAVITY * timeElapsed;
-			//std::cout << "friction:" << friction;
 		}
 
 		if (abs(velocity.x) > friction) {
 			// apply kinetic friction in direction opposite motion
-			element->applyVelocity(Vector2{ -copysign(friction, velocity.x), 0 });
+			velocity += Vector2{ -copysign(friction, velocity.x), 0 }; 
 		}
 		else {
-			//static friction overcomes motion
-			element->setVelocity(Vector2{ 0, velocity.y });
+			velocity.x = 0; //static friction overcomes motion
 		}
 
-		element->applyVelocity(Vector2{ 0, GRAVITY } *timeElapsed); // gravity
-		velocity = element->getVelocity();
+		// gravity
+		velocity += Vector2{ 0, GRAVITY } * timeElapsed; 
 
 		// clamp axial velocities to their respective maximums
-		element->setVelocity(Vector2{ SDL_clamp(velocity.x, -maxVelocity.x, maxVelocity.x),
-			SDL_clamp(velocity.y, -maxVelocity.y, maxVelocity.y) });
-		velocity = element->getVelocity();
+		velocity.x = SDL_clamp(velocity.x, -maxVelocity.x, maxVelocity.x);
+		velocity.y = SDL_clamp(velocity.y, -maxVelocity.y, maxVelocity.y);
 
 		double newPosX = position.x + velocity.x * timeElapsed;
 		double newPosY = position.y + velocity.y * timeElapsed; // calculate new position from velocity
 		
+		element->setVelocity(velocity); // finalize velocity
+
 		if (element->isCollidable()) { // if collidable make collision checks, else directly set pos
 			Vector2 collisionAdjustedPos = position;
 			
 			// checks for collisions axis by axis. It is possible to clip certain corners since
-			// each axis is checked and fixed indenpendently, but unlikely unless moving at
+			// each axis is checked and fixed indepeendently, but unlikely unless moving at
 			// high speed or lagging
 			
 			// fix x axis
@@ -154,7 +150,7 @@ void PhysicsEngine::step() {
 				velocity.x = 0;
 			}
 
-			// if y collided with an element from below, reset velocity to 0 and ground element
+			// if y collided with an element, reset velocity to 0
 			if (YTranslationReq.collidingElement) {
 				element->setVelocity(Vector2{ velocity.x, 0 });
 
@@ -171,12 +167,9 @@ void PhysicsEngine::step() {
 				}
 			}
 		}
-		else {
+		else { // not collidable, directly set position
 			element->setPosition(Vector2{newPosX, newPosY});
 		}
-
-		//std::cout << "ground: " << element->getGroundingElement() << ";";
-		//std::cout << "Acceleration: " << element->getAcceleration() << "; Velocity: " << element->getVelocity() << std::endl;
 	}
 
 	lastFrameTime = SDL_GetTicks();
