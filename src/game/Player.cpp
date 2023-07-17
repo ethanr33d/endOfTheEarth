@@ -11,7 +11,6 @@ void Player::applyAccelerationFromMatrix() {
 		friction = m_groundedBy->getFrictionConstant();
 	}
 
-	std::cout << "grounded by " << friction << std::endl;
 	newAcceleration.x = (-1 * m_movementMatrix.moveLeft + m_movementMatrix.moveRight) 
 		* MOVE_ACCELERATION * friction;
 
@@ -46,7 +45,6 @@ void Player::setGrounded(const bool grounded) {
 
 	if (grounded && m_movementMatrix.jump) {
 		applyVelocity(Vector2{ 0, -JUMP_POWER });
-		std::cout << "jumping" << std::endl;
 	}
 
 	applyAccelerationFromMatrix();
@@ -61,7 +59,7 @@ void Player::keyUp(SDL_Keycode key) {
 }
 
 void Player::draw() {
-	SDL_Rect drawBounds = getIntCastedBounds();
+	SDL_Rect drawBounds = getRenderPosition();
 	SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 255);
 	SDL_RenderFillRect(m_renderer, &drawBounds);
 }

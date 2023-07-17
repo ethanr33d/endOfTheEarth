@@ -14,7 +14,7 @@ class Player : public PhysicsElement, public IKeyboardListener {
 		inline static const SDL_Keycode MOVE_RIGHT_KEY = SDLK_d;
 		inline static const double MOVE_SPEED = 300; // pixels per second
 		inline static const double MOVE_ACCELERATION = 3000; // how fast move speed is achieved
-		inline static const double JUMP_POWER = 650; // instant jump velocity
+		inline static const double JUMP_POWER = 700; // instant jump velocity
 
 		// state sructure used to calcuate acceleration to apply based on user input
 		struct PlayerMovementMatrix {
