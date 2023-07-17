@@ -12,6 +12,6 @@ struct GameData {
 	std::vector<Brick*> brickList;
 	// other useful state information here
 
-	GameData(SDL_Renderer* renderer, PhysicsEngine& physicsEngine)
+	GameData(SDL_Renderer* renderer)
 		: player(Player(renderer)) {};
 };
