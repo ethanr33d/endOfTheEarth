@@ -12,6 +12,7 @@
 #include "UI/IHoverable.h"
 #include "IKeyboardListener.h"
 #include "game/PhysicsEngine.h"
+#include "game/Camera.h"
 
 class GameState; // forward declaration for circular dependency
 class TextNode;
@@ -50,7 +51,9 @@ class Engine {
 		std::stack<GameState*> m_gameStates;
 		SDL_Window* m_mainWindow;
 		SDL_Renderer* m_renderer;
-		PhysicsEngine m_physicsEngine;
+		PhysicalWorld* m_physicsSimulation;
+		PhysicsEngine* m_physicsEngine;
+		Camera* m_camera;
 		
 		// Engine state variables
 		bool m_changingState; // used to invalidate event loop after state changes
@@ -72,7 +75,8 @@ class Engine {
 
 		Engine() : m_fpsCounter{ nullptr }, m_clickableElements{ nullptr }, m_hoverableElements{ nullptr },
 			m_keyboardListeners{ nullptr }, m_currentlyHoveredElements{ nullptr },
-			m_mainWindow { nullptr }, m_renderer{ nullptr }, m_changingState{ false } {};
+			m_mainWindow { nullptr }, m_renderer{ nullptr }, m_changingState{ false },
+			m_physicsSimulation{ nullptr }, m_physicsEngine { nullptr }, m_camera{ nullptr } {};
 		/* Init/Game loop functions */
 
 
@@ -107,5 +111,6 @@ class Engine {
 
 		// get the engine's renderer
 		SDL_Renderer* getRenderer();
-		PhysicsEngine& getPhysicsEngine();
+		PhysicalWorld* getPhysicsSimulation();
+		Camera* getCamera();
 };

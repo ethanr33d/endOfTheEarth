@@ -66,6 +66,9 @@ Engine::~Engine() {
 	}
 
 	delete m_fpsCounter;
+	delete m_physicsEngine;
+	delete m_camera;
+	delete m_physicsSimulation;
 
 	// close libraries
 	if (m_mainWindow) SDL_DestroyWindow(m_mainWindow);
@@ -119,6 +122,10 @@ bool Engine::initializeComponents(const std::string& appName) {
 
 	m_fpsCounter = new TextNode(m_renderer, "FPS:", 16); // initialize fpsCounter
 	m_fpsCounter->show();
+
+	m_physicsSimulation = new PhysicalWorld();
+	m_physicsEngine = new PhysicsEngine(*m_physicsSimulation);
+	m_camera = new Camera(*m_physicsSimulation);
 	return true;
 }
 
@@ -261,7 +268,8 @@ bool Engine::handleEvents() {
 }
 
 void Engine::physicsStep() {
-	m_physicsEngine.step();
+	m_physicsEngine->step();
+	m_camera->step();
 }
 
 void Engine::renderFrame() {
@@ -282,6 +290,10 @@ SDL_Renderer* Engine::getRenderer() {
 	return m_renderer;
 }
 
-PhysicsEngine& Engine::getPhysicsEngine() {
-	return m_physicsEngine;
+PhysicalWorld* Engine::getPhysicsSimulation() {
+	return m_physicsSimulation;
+}
+
+Camera* Engine::getCamera() {
+	return m_camera;
 }
