@@ -19,11 +19,6 @@ void Player::applyAccelerationFromMatrix() {
 }
 
 void Player::adjustMovementMatrixFromInput(SDL_Keycode key, bool keyState) {
-	double friction = PhysicsEngine::AIR_RESISTANCE;
-
-	if (m_groundedBy) {
-		friction = m_groundedBy->getFrictionConstant();
-	}
 	switch (key) {
 		case MOVE_UP_KEY:
 		case SECONDARY_UP_KEY:
