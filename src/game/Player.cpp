@@ -42,7 +42,7 @@ void Player::setGrounded(const bool grounded) {
 		applyVelocity(Vector2{ 0, -JUMP_POWER });
 	}
 
-	applyAccelerationFromMatrix();
+	applyAccelerationFromMatrix(); // friction may have changed
 }
 
 void Player::keyDown(SDL_Keycode key) {
