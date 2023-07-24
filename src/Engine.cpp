@@ -268,7 +268,9 @@ bool Engine::handleEvents() {
 }
 
 void Engine::physicsStep() {
+	m_physicsSimulation->firePrePhysicsEvent();
 	m_physicsEngine->step();
+	m_physicsSimulation->firePostPhysicsEvent();
 	m_camera->step();
 }
 
