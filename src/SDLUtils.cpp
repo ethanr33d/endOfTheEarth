@@ -43,7 +43,7 @@ SDL_Texture* SDLUtils::loadTexture(SDL_Renderer* renderer, const std::string& fi
 	newTex = IMG_LoadTexture(renderer, file.c_str());
 
 	if (newTex == nullptr) {
-		error("CreateTextureFromSurface");
+		error("SDLUtils::loadTexture IMG_LoadTexture");
 	}
 
 	return newTex;
