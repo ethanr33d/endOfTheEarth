@@ -156,14 +156,21 @@ void PhysicsEngine::step() {
 
 				// if collision adjusted is less than requested, element must have hit ground
 				if (collisionAdjustedPos.y < newPosY) {
-					element->setGroundingElement(YTranslationReq.collidingElement);
-					element->setGrounded(true); 
+					element->_setGroundingElement(YTranslationReq.collidingElement);
+					
+					if (!element->isGrounded()) { // avoid redundant calls if element already grounded
+						element->_setGrounded(true); 
+					}
+				}
+				else { // element must have hit a ceiling, must not be grounded
+					if (element->isGrounded()) {
+						element->_setGrounded(false);
+					}
 				}
 			}
-			else {
-				// avoid redundant calls if element is already in free fall
+			else { 	// element did not collide with any element, must be falling
 				if (element->isGrounded()) {
-					element->setGrounded(false);
+					element->_setGrounded(false);
 				}
 			}
 		}
