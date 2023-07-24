@@ -24,6 +24,7 @@
     <ClInclude Include="src\Engine.h" />
     <ClInclude Include="src\GameLoading.h" />
     <ClInclude Include="src\GameState.h" />
+    <ClInclude Include="src\game\Animator.h" />
     <ClInclude Include="src\game\Brick.h" />
     <ClInclude Include="src\game\Camera.h" />
     <ClInclude Include="src\game\GameData.h" />
@@ -32,6 +33,7 @@
     <ClInclude Include="src\game\PhysicsEngine.h" />
     <ClInclude Include="src\game\PhysicsRect.h" />
     <ClInclude Include="src\game\Player.h" />
+    <ClInclude Include="src\game\TerrainBrick.h" />
     <ClInclude Include="src\game\Vector2.h" />
     <ClInclude Include="src\HelpScreen.h" />
     <ClInclude Include="src\IKeyboardListener.h" />
@@ -49,12 +51,14 @@
     <ClCompile Include="src\Engine.cpp" />
     <ClCompile Include="src\GameLoading.cpp" />
     <ClCompile Include="src\GameState.cpp" />
+    <ClCompile Include="src\game\Animator.cpp" />
     <ClCompile Include="src\game\Brick.cpp" />
     <ClCompile Include="src\game\Camera.cpp" />
     <ClCompile Include="src\game\PhysicalWorld.cpp" />
     <ClCompile Include="src\game\PhysicsElement.cpp" />
     <ClCompile Include="src\game\PhysicsEngine.cpp" />
     <ClCompile Include="src\game\Player.cpp" />
+    <ClCompile Include="src\game\TerrainBrick.cpp" />
     <ClCompile Include="src\HelpScreen.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MainMenu.cpp" />
