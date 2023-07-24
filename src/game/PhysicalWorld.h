@@ -20,4 +20,10 @@ class PhysicalWorld {
 
 		// return the list of elements. Elements can be modified but the list cannot
 		const std::set<PhysicsElement*>* getElements();
+
+		// signal to all elements physics step is about to start
+		void firePrePhysicsEvent();
+
+		// signal to all elements physics step is finished
+		void firePostPhysicsEvent();
 };

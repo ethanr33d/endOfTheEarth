@@ -11,3 +11,15 @@ void PhysicalWorld::removeElement(PhysicsElement* element) {
 const std::set<PhysicsElement*>* PhysicalWorld::getElements() {
 	return &m_physicsElements;
 }
+
+void PhysicalWorld::firePrePhysicsEvent() {
+	for (PhysicsElement* element : m_physicsElements) {
+		element->prePhysicsStep();
+	}
+}
+
+void PhysicalWorld::firePostPhysicsEvent() {
+	for (PhysicsElement* element : m_physicsElements) {
+		element->postPhysicsStep();
+	}
+}
