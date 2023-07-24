@@ -5,7 +5,7 @@ GameLoading::GameLoading(Engine& engine) : GameState(engine),
 	PhysicalWorld* simulaton = engine.getPhysicsSimulation();
 	Camera* camera = engine.getCamera();
 
-	m_game.player.setSize(Vector2{ 50, 50 });
+	m_game.player.setSize(Vector2{ 96, 96 });
 	m_game.player.setPosition(Vector2{ 300, -100 });
 	
 	srand(SDL_GetTicks());
