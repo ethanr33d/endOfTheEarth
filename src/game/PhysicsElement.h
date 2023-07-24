@@ -36,18 +36,18 @@ class PhysicsElement {
 	
 	void setSize(const Vector2& m_size);
 	void setPosition(const Vector2& position);
-	void setVelocity(const Vector2& velocity); 
-	void setAcceleration(const Vector2& acceleration);
+	void setVelocity(const Vector2& velocity); // prefer applyVelocity
+	void setAcceleration(const Vector2& acceleration); // prefer applyAcceleration
+
+	// should only be used by physics engine
+	void _setGrounded(const bool grounded);
+	void _setGroundingElement(PhysicsElement* element);
 
 	void setAnchored(const bool anchored);
 	void setCollidable(const bool collidable);
 	void setMaxVelocity(const Vector2& maxVelocity);
 	void setFrictionConstant(const double friction);
 	void setDrawablePosition(const Vector2& position);
-
-	// these allow overloads if element needs to perform extra processing
-	virtual void setGrounded(const bool grounded);
-	virtual void setGroundingElement(PhysicsElement* element);
 
 	Vector2 getSize() const;
 	Vector2 getPosition() const;
@@ -62,7 +62,10 @@ class PhysicsElement {
 	bool isGrounded() const;
 	PhysicsElement* getGroundingElement() const;
 
-	SDL_Rect getRenderPosition() const;
+	SDL_Rect getRenderBounds() const;
 	PhysicsRect getBounds() const;
+
+	virtual void prePhysicsStep();
+	virtual void postPhysicsStep();
 	virtual void draw() = 0; // physics elements still need to be drawn
 };

@@ -43,11 +43,11 @@ void PhysicsElement::setFrictionConstant(const double friction) {
 	m_frictionConstant = friction;
 }
 
-void PhysicsElement::setGrounded(const bool grounded) {
+void PhysicsElement::_setGrounded(const bool grounded) {
 	m_grounded = grounded;
 }
 
-void PhysicsElement::setGroundingElement(PhysicsElement* element) {
+void PhysicsElement::_setGroundingElement(PhysicsElement* element) {
 	m_groundedBy = element;
 }
 
@@ -96,7 +96,7 @@ PhysicsElement* PhysicsElement::getGroundingElement() const {
 }
 
 
-SDL_Rect PhysicsElement::getRenderPosition() const {
+SDL_Rect PhysicsElement::getRenderBounds() const {
 	return SDL_Rect{ static_cast<int>(m_drawablePosition.x), 
 		static_cast<int>(m_drawablePosition.y),
 		static_cast<int>(m_size.x),
@@ -106,4 +106,12 @@ SDL_Rect PhysicsElement::getRenderPosition() const {
 
 PhysicsRect PhysicsElement::getBounds() const {
 	return PhysicsRect{ m_position.x, m_position.y, m_size.x, m_size.y };
+}
+
+void PhysicsElement::prePhysicsStep() {
+	return; // do nothing by default
+}
+
+void PhysicsElement::postPhysicsStep() {
+	return; // do nothing by default
 }
