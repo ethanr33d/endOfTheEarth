@@ -1,9 +1,11 @@
 #pragma once
 
 #include "SDL2/SDL.h"
+#include "../SDLUtils.h"
 #include "PhysicsElement.h"
 #include "../IKeyboardListener.h"
 #include "PhysicsEngine.h"
+#include "Animator.h"
 
 class Player : public PhysicsElement, public IKeyboardListener {
 	private:
@@ -15,6 +17,10 @@ class Player : public PhysicsElement, public IKeyboardListener {
 		inline static const double MOVE_SPEED = 300; // pixels per second
 		inline static const double MOVE_ACCELERATION = 3000; // how fast move speed is achieved
 		inline static const double JUMP_POWER = 700; // instant jump velocity
+		inline static const std::string ANIMATION_SHEET = 
+			SDLUtils::getResourceDirPath("entities\\player") + "playerAnimations.png";
+		inline static const std::string ANIMATION_SHEET_DATA =
+			SDLUtils::getResourceDirPath("entities\\player") + "playerAnimations.spriteData";
 
 		// state sructure used to calcuate acceleration to apply based on user input
 		struct PlayerMovementMatrix {
@@ -26,6 +32,7 @@ class Player : public PhysicsElement, public IKeyboardListener {
 		} m_movementMatrix;
 
 		Vector2 m_inputAcceleration; // acceleration from keyboard sources 
+		Animator animator; // handles animations for player
 
 		// calculate the net acceleration to apply from matrix
 		void applyAccelerationFromMatrix();
@@ -35,10 +42,10 @@ class Player : public PhysicsElement, public IKeyboardListener {
 		// @param keyState: whether key was pressed down or up
 		void adjustMovementMatrixFromInput(SDL_Keycode key, bool keyState);
 	public:
-		Player(SDL_Renderer* renderer) : PhysicsElement(renderer), m_inputAcceleration(Vector2())
-		{ setMaxVelocity(Vector2{MOVE_SPEED, INT_MAX}); };
+		Player(SDL_Renderer* renderer);
 
-		virtual void setGrounded(const bool grounded) override; // process jumps if necessary
+		virtual void prePhysicsStep();
+		virtual void postPhysicsStep();
 		virtual void keyDown(SDL_Keycode key);
 		virtual void keyUp(SDL_Keycode key);
 		virtual void draw();

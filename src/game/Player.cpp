@@ -18,6 +18,11 @@ void Player::applyAccelerationFromMatrix() {
 	applyAcceleration(newAcceleration);
 }
 
+Player::Player(SDL_Renderer* renderer) : PhysicsElement(renderer), m_inputAcceleration(Vector2()),
+	animator(ANIMATION_SHEET, ANIMATION_SHEET_DATA, renderer, this) {
+	setMaxVelocity(Vector2{ MOVE_SPEED, INT_MAX });
+};
+
 void Player::adjustMovementMatrixFromInput(SDL_Keycode key, bool keyState) {
 	switch (key) {
 		case MOVE_UP_KEY:
@@ -26,23 +31,24 @@ void Player::adjustMovementMatrixFromInput(SDL_Keycode key, bool keyState) {
 			break;
 		case MOVE_RIGHT_KEY:
 			m_movementMatrix.moveRight = keyState;
-			applyAccelerationFromMatrix();
 			break;
 		case MOVE_LEFT_KEY:
 			m_movementMatrix.moveLeft = keyState;
-			applyAccelerationFromMatrix();
 			break;
 	}
 }
 
-void Player::setGrounded(const bool grounded) {
-	PhysicsElement::setGrounded(grounded); // default behavior
-
-	if (grounded && m_movementMatrix.jump) {
+// do movement calculations
+void Player::prePhysicsStep() {
+	if (m_grounded && m_movementMatrix.jump) {
 		applyVelocity(Vector2{ 0, -JUMP_POWER });
 	}
 
-	applyAccelerationFromMatrix(); // friction may have changed
+	applyAccelerationFromMatrix();
+}
+
+void Player::postPhysicsStep() {
+	animator.animate(); // calculate next animation frame
 }
 
 void Player::keyDown(SDL_Keycode key) {
@@ -54,7 +60,5 @@ void Player::keyUp(SDL_Keycode key) {
 }
 
 void Player::draw() {
-	SDL_Rect drawBounds = getRenderPosition();
-	SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, 255);
-	SDL_RenderFillRect(m_renderer, &drawBounds);
+	animator.drawAnimationFrame();
 }
