@@ -19,7 +19,7 @@ void Player::applyAccelerationFromMatrix() {
 }
 
 Player::Player(SDL_Renderer* renderer) : PhysicsElement(renderer), m_inputAcceleration(Vector2()),
-	animator(ANIMATION_SHEET, ANIMATION_SHEET_DATA, renderer, this) {
+	m_animator(ANIMATION_SHEET, ANIMATION_SHEET_DATA, renderer, this) {
 	setMaxVelocity(Vector2{ MOVE_SPEED, INT_MAX });
 };
 
@@ -38,6 +38,12 @@ void Player::adjustMovementMatrixFromInput(SDL_Keycode key, bool keyState) {
 	}
 }
 
+void Player::setSize(const Vector2& size) {
+	PhysicsElement::setSize(size);
+
+	m_size = m_animator.getCollisionSizeFromSheet(); // correct to true collision box
+}
+
 // do movement calculations
 void Player::prePhysicsStep() {
 	if (m_grounded && m_movementMatrix.jump) {
@@ -48,7 +54,7 @@ void Player::prePhysicsStep() {
 }
 
 void Player::postPhysicsStep() {
-	animator.animate(); // calculate next animation frame
+	m_animator.animate(); // calculate next animation frame
 }
 
 void Player::keyDown(SDL_Keycode key) {
@@ -60,5 +66,5 @@ void Player::keyUp(SDL_Keycode key) {
 }
 
 void Player::draw() {
-	animator.drawAnimationFrame();
+	m_animator.drawAnimationFrame();
 }

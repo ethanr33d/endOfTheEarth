@@ -18,9 +18,9 @@ class Player : public PhysicsElement, public IKeyboardListener {
 		inline static const double MOVE_ACCELERATION = 3000; // how fast move speed is achieved
 		inline static const double JUMP_POWER = 700; // instant jump velocity
 		inline static const std::string ANIMATION_SHEET = 
-			SDLUtils::getResourceDirPath("entities\\player") + "playerAnimations.png";
+			SDLUtils::getResourceDirPath("entities\\player") + "larryAnimations.png";
 		inline static const std::string ANIMATION_SHEET_DATA =
-			SDLUtils::getResourceDirPath("entities\\player") + "playerAnimations.spriteData";
+			SDLUtils::getResourceDirPath("entities\\player") + "larryAnimations.spriteData";
 
 		// state sructure used to calcuate acceleration to apply based on user input
 		struct PlayerMovementMatrix {
@@ -32,7 +32,7 @@ class Player : public PhysicsElement, public IKeyboardListener {
 		} m_movementMatrix;
 
 		Vector2 m_inputAcceleration; // acceleration from keyboard sources 
-		Animator animator; // handles animations for player
+		Animator m_animator; // handles animations for player
 
 		// calculate the net acceleration to apply from matrix
 		void applyAccelerationFromMatrix();
@@ -44,6 +44,7 @@ class Player : public PhysicsElement, public IKeyboardListener {
 	public:
 		Player(SDL_Renderer* renderer);
 
+		virtual void setSize(const Vector2& size) override; // need to rescale based on animation size
 		virtual void prePhysicsStep();
 		virtual void postPhysicsStep();
 		virtual void keyDown(SDL_Keycode key);
