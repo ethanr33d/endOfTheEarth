@@ -13,6 +13,7 @@ void PhysicsElement::applyVelocity(const Vector2& velocity) {
 
 void PhysicsElement::setSize(const Vector2& size) {
 	m_size = size;
+	m_drawableSize = size;
 }
 
 void PhysicsElement::setPosition(const Vector2& position) {
@@ -95,12 +96,11 @@ PhysicsElement* PhysicsElement::getGroundingElement() const {
 	return m_groundedBy;
 }
 
-
 SDL_Rect PhysicsElement::getRenderBounds() const {
 	return SDL_Rect{ static_cast<int>(m_drawablePosition.x), 
 		static_cast<int>(m_drawablePosition.y),
-		static_cast<int>(m_size.x),
-		static_cast<int>(m_size.y)
+		static_cast<int>(m_drawableSize.x),
+		static_cast<int>(m_drawableSize.y)
 	};
 }
 

@@ -10,6 +10,10 @@ class PhysicsElement {
 	SDL_Renderer* m_renderer;
 	Vector2 m_drawablePosition; // computed by camera for final render position
 
+	// final rendering size, separate from size used for physics calculations
+	// by default is synced with physics size
+	Vector2 m_drawableSize; 
+
 	// these should only be set using modifying functions
 	Vector2 m_size;
 	Vector2 m_position;
@@ -34,7 +38,7 @@ class PhysicsElement {
 	void applyVelocity(const Vector2& velocity);
 	void applyAcceleration(const Vector2& acceleration);
 	
-	void setSize(const Vector2& m_size);
+	virtual void setSize(const Vector2& size); // allow overrides if additional processing neeeded
 	void setPosition(const Vector2& position);
 	void setVelocity(const Vector2& velocity); // prefer applyVelocity
 	void setAcceleration(const Vector2& acceleration); // prefer applyAcceleration
