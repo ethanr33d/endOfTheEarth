@@ -7,22 +7,28 @@
 #include "PhysicsElement.h"
 #include "PhysicsEngine.h" // for math functions
 #include <fstream>
+#include <vector>
 
-// contains the frame count of each animation in an animation sprite sheet
+// struct for data on a specific aniamtion
+struct AnimationSpriteData {
+	int frameCount; // how many frames are in the animation
+};
 struct AnimationSpritesheetData {
-	int spriteSizeX;
+	int spriteSizeX; // size of sprite for rendering
 	int spriteSizeY;
+	int collisionBoxX; // size of the collision box for physics purposes
+	int collisionBoxY;
 
-	int idleFrames;
-	int walkFrames;
-	int jumpFrames;
+	std::vector<AnimationSpriteData> animData;
 
-	AnimationSpritesheetData() = default;
+	AnimationSpritesheetData() : spriteSizeX(0), spriteSizeY(0), collisionBoxX(0),
+		collisionBoxY(0) {};
 };
 
 class Animator {
 	private:
-		enum ANIMATION_STATE {IDLE, WALKING, JUMPING};
+		// ANIM_TYPE_COUNT for count of animation 
+		enum ANIMATION_STATE {IDLE, WALKING, JUMPING, ANIM_STATE_COUNT};
 
 		SDL_Renderer* m_renderer;
 		SDL_Texture* m_spriteSheet;
@@ -51,4 +57,8 @@ class Animator {
 
 		// animate an element 
 		void playAnimation();
+
+		// get the appropriate width and height for the collision box of the loaded animation sheet
+		// takes into account if the element has been scaled from sprite size
+		Vector2 getCollisionSizeFromSheet();
 };

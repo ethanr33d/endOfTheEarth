@@ -32,9 +32,16 @@ Animator::Animator(const std::string& sheet, const std::string& sheetData, SDL_R
 
 	dataFile >> m_sheetData.spriteSizeX;
 	dataFile >> m_sheetData.spriteSizeY;
-	dataFile >> m_sheetData.idleFrames;
-	dataFile >> m_sheetData.walkFrames;
-	dataFile >> m_sheetData.jumpFrames;
+	dataFile >> m_sheetData.collisionBoxX;
+	dataFile >> m_sheetData.collisionBoxY;
+
+	for (int i = 0; i < ANIM_STATE_COUNT; i++) {
+		AnimationSpriteData newAnim{};
+
+		dataFile >> newAnim.frameCount;
+
+		m_sheetData.animData.push_back(newAnim);
+	}
 }
 
 void Animator::animate() {
@@ -49,13 +56,13 @@ void Animator::animate() {
 	if (timeSinceLastFrame > 100) {
 		switch (m_animState) { // increment frame number / loop back to beginning
 			case IDLE:
-				(m_animFrameNumber += 1) %= m_sheetData.idleFrames;
+				(m_animFrameNumber += 1) %= m_sheetData.animData[IDLE].frameCount;
 				break;
 			case WALKING:
-				(m_animFrameNumber += 1) %= m_sheetData.walkFrames;
+				(m_animFrameNumber += 1) %= m_sheetData.animData[WALKING].frameCount;
 				break;
 			case JUMPING:
-				(m_animFrameNumber += 1) %= m_sheetData.jumpFrames;
+				(m_animFrameNumber += 1) %= m_sheetData.animData[JUMPING].frameCount;
 				break;
 		}
 
@@ -66,6 +73,8 @@ void Animator::animate() {
 
 void Animator::drawAnimationFrame() {
 	SDL_Rect drawablePos = m_rig->getRenderBounds();
+	drawablePos.x -= 31;
+	drawablePos.y -= 21; 
 
 	SDL_Rect spriteClip{
 		m_animFrameNumber * m_sheetData.spriteSizeX,
@@ -83,6 +92,21 @@ void Animator::drawAnimationFrame() {
 	SDL_RenderCopyEx(m_renderer, m_spriteSheet, &spriteClip, &drawablePos, 0, NULL, flip);
 }
 
+Vector2 Animator::getCollisionSizeFromSheet() {
+	Vector2 resultVector;
+	Vector2 currentSize = m_rig->getSize();
+
+	// scaling factor * raw collision box size
+	resultVector.x = currentSize.x / m_sheetData.spriteSizeX * m_sheetData.collisionBoxX;
+	resultVector.y = currentSize.y / m_sheetData.spriteSizeY * m_sheetData.collisionBoxY;
+
+	std::cout << resultVector << "," << currentSize << std::endl;
+	return resultVector;
+}
+
+/* TODO:
 void Animator::playAnimation() {
 
 }
+
+*/
