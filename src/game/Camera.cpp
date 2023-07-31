@@ -2,7 +2,7 @@
 
 void Camera::offsetElements(const Vector2& offset) {
 	for (PhysicsElement* element : *m_simulation.getElements()) {
-		Vector2 newPos{ round(element->getPosition().x - offset.x), round(element->getPosition().y - offset.y)};
+		Vector2 newPos{ ceil(element->getPosition().x - offset.x), ceil(element->getPosition().y - offset.y)};
 		element->setDrawablePosition(newPos);
 	}
 }
