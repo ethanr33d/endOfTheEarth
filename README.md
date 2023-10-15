@@ -1,6 +1,6 @@
 # End of the Earth
 
-Runner game. Work in progress.
+Summer project. Goal was to make an infinite runner game using C++ and the SDL graphics library. Still a work in progress, but prebuilt development/concept binaries are available in the releases section.
 
 ## Build Instructions
 ### Windows using Visual Studio & Vcpkg
@@ -37,7 +37,3 @@ Once vcpkg is installed, cd into the vcpkg directory and run the following comma
    - Release: Optimized final build used for releases
 9.  Build solution through Build Menu -> Build Solution. The build is stored in the x64 folder in the local repository directory as either Debug or Release depending on build target. The int folder contains build intermediates (.obj, build logs, etc).
 10. Run program through directory folder or within Visual Studio using Local Windows Debugger button or through the Debug Menu -> Start Debugging.
-
-
-### Linux
-Absolutely not
